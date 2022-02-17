@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP_CodeSniffer" xsi:noNamespaceSchemaLocation="phpcs.xsd">
+    <description>Using PSR12 standard</description>
+
+    <file>./app</file>
+    <file>./database</file>
+    <file>./routes</file>
+    <file>./tests</file>
+
+    <exclude-pattern>./app/Events/Event.php</exclude-pattern>
+    <exclude-pattern>./app/Http/Controllers/Controller.php</exclude-pattern>
+    <exclude-pattern>./app/Jobs/Job.php</exclude-pattern>
+    <exclude-pattern>./database/factories/ModelFactory.php</exclude-pattern>
+    <exclude-pattern>./database/seeds/DatabaseSeeder.php</exclude-pattern>
+
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="Generic.PHP.Syntax"/>
+
+    <rule ref="PSR12"></rule>
+</ruleset>
