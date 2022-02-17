@@ -3,6 +3,7 @@
     "description": "crawler implement in PHP",
     "type": "library",
     "require": {
+        "php": "^7.4|^8.0",
         "guzzlehttp/guzzle": "^7.1",
         "symfony/dom-crawler": "^5.4"
     },
