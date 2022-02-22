@@ -2,6 +2,8 @@
 
 namespace Johnroyer\Crawler;
 
+use GuzzleHttp\Client;
+
 class Crawler
 {
     protected $startUrl = '';
@@ -18,7 +20,13 @@ class Crawler
         // TODO: save crawler status
     }
 
-    public function crawl(string $url) {
+    public function crawl(string $url)
+    {
         $this->startUrl = $url;
+
+        $httpClient = new Client();
+        $content = $httpClient->get($this->startUrl);
+
+        return true;
     }
 }
