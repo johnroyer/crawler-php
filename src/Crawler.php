@@ -31,6 +31,26 @@ class Crawler
         return $this;
     }
 
+    public function setTimeout(int $second)
+    {
+        if (1 >= $timeout) {
+            throw new \Exception('timeout must larager then 1');
+        }
+        $this->timeout = $second;
+
+        return $this;
+    }
+
+    public function setDelay(int $second)
+    {
+        if (0 > $second) {
+            throw  new \Exception('delay must be 0 or bigger');
+        }
+        $this->delay = $second;
+
+        return $this;
+    }
+
     public function crawl(string $url)
     {
         $this->startUrl = $url;
