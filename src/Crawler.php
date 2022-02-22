@@ -24,6 +24,13 @@ class Crawler
         // TODO: save crawler status
     }
 
+    public function setFollowRedirect()
+    {
+        $this->allowRedirect = true;
+
+        return $this;
+    }
+
     public function crawl(string $url)
     {
         $this->startUrl = $url;
