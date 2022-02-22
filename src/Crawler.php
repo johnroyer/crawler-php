@@ -7,6 +7,10 @@ use GuzzleHttp\Client;
 class Crawler
 {
     protected $startUrl = '';
+    protected $allowRedirect = true;
+    protected $timeout = 10;
+    protected $delay = 0;
+    protected $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
 
     /**
      */
