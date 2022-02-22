@@ -17,4 +17,8 @@ class Crawler
     {
         // TODO: save crawler status
     }
+
+    public function crawl(string $url) {
+        $this->startUrl = $url;
+    }
 }
