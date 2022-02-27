@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnroyer\Crawler;
+namespace Zeroplex\Crawler;
 
 use GuzzleHttp\Client;
 
