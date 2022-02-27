@@ -14,8 +14,7 @@
 >
     <testsuites>
         <testsuite name="Crawler TestSuite">
-            <directory suffix="Test.php">./tests</directory>
+            <directory suffix="Test.php">./tests/src</directory>
         </testsuite>
     </testsuites>
-    </php>
 </phpunit>
