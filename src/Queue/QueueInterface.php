@@ -14,4 +14,19 @@ namespace Zeroplex\Crawler\Queue;
  */
 interface QueueInterface
 {
+    /**
+     * Check if the queue is empty.
+     *
+     * Return true if the queue has no element inside, false if not.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool;
+
+    /**
+     * Return the size of current queue
+     *
+     * @return int
+     */
+    public function getLength(): int;
 }
