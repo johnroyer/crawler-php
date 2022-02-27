@@ -14,7 +14,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Johnroyer\\Crawler\\": "src/"
+            "Zeroplex\\Crawler\\": "src/"
         }
     },
     "autoload-dev": {
