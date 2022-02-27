@@ -44,4 +44,15 @@ interface QueueInterface
      * @return mixed
      */
     public function pop(): mixed;
+
+    /**
+     * Convert queue data into an array.
+     *
+     * Notice: make sure that queue behaviour
+     * will NOT affected by the returned array. If you return
+     * the array with same reference used in object, it is dangerous.
+     *
+     * @return array
+     */
+    public function toArray(): array;
 }
