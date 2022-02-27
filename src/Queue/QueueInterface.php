@@ -29,4 +29,19 @@ interface QueueInterface
      * @return int
      */
     public function getLength(): int;
+
+    /**
+     * Push element into queue
+     *
+     * @param mixed $element
+     * @return void
+     */
+    public function push(mixed $element): void;
+
+    /**
+     * Get an element from the queue
+     *
+     * @return mixed
+     */
+    public function pop(): mixed;
 }
