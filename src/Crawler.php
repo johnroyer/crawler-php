@@ -56,7 +56,7 @@ class Crawler
         $this->startUrl = $url;
 
         $httpClient = new Client();
-        $content = $httpClient->get($this->startUrl);
+        $response = $httpClient->get($this->startUrl);
 
         return true;
     }
