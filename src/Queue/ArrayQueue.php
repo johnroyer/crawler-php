@@ -2,7 +2,7 @@
 
 namespace Zeroplex\Crawler\Queue;
 
-class Queue implements QueueInterface
+class ArrayQueue implements QueueInterface
 {
     protected $list;
 
