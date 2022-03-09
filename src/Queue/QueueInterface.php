@@ -36,14 +36,14 @@ interface QueueInterface
      * @param mixed $element
      * @return void
      */
-    public function push(mixed $element): void;
+    public function push($element): void;
 
     /**
      * Get an element from the queue
      *
      * @return mixed
      */
-    public function pop(): mixed;
+    public function pop();
 
     /**
      * Convert queue data into an array.
