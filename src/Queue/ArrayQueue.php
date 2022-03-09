@@ -32,7 +32,7 @@ class ArrayQueue implements QueueInterface
      */
     public function push($element): void
     {
-        array_push($this->list, $element);
+        $this->list[] = $element;
     }
 
     /**
@@ -40,7 +40,7 @@ class ArrayQueue implements QueueInterface
      */
     public function pop()
     {
-        return array_pop($this->list);
+        return array_shift($this->list);
     }
 
     /**
