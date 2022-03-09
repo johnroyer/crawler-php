@@ -30,17 +30,17 @@ class ArrayQueue implements QueueInterface
     /**
      * @inheritDoc
      */
-    public function push(mixed $element): void
+    public function push($element): void
     {
-        array_push($this->list, $element);
+        $this->list[] = $element;
     }
 
     /**
      * @inheritDoc
      */
-    public function pop(): mixed
+    public function pop()
     {
-        return array_pop($this->list);
+        return array_shift($this->list);
     }
 
     /**
