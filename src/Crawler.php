@@ -68,6 +68,9 @@ class Crawler
             'connect_timeout' => $this->timeout,
             'delay' => $this->delay,
             'read_timeout' => $this->timeout,
+            'headers' => [
+                'User-Agent' => $this->userAgent,
+            ]
         ]);
 
         return true;
