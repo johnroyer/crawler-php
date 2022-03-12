@@ -41,6 +41,13 @@ class Crawler
         return $this;
     }
 
+    public function setUserAgnet(string $agent = '')
+    {
+        if (!empty($agent)) {
+            $this->userAgent = $agent;
+        }
+    }
+
     public function setDelay(int $second)
     {
         if (0 > $second) {
@@ -56,7 +63,15 @@ class Crawler
         $this->startUrl = $url;
 
         $httpClient = new Client();
-        $response = $httpClient->get($this->startUrl);
+        $response = $httpClient->get($this->startUrl, [
+            'allow_redirects' => $this->allowRedirect,
+            'connect_timeout' => $this->timeout,
+            'delay' => $this->delay,
+            'read_timeout' => $this->timeout,
+            'headers' => [
+                'User-Agent' => $this->userAgent,
+            ]
+        ]);
 
         return true;
     }
