@@ -56,7 +56,11 @@ class Crawler
         $this->startUrl = $url;
 
         $httpClient = new Client();
-        $response = $httpClient->get($this->startUrl);
+        $response = $httpClient->get($this->startUrl, [
+            'allow_redirects' => $this->allowRedirect,
+            'connect_timeout' => $this->timeout,
+            'delay' => $this->delay,
+        ]);
 
         return true;
     }
