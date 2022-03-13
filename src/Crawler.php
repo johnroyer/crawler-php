@@ -73,6 +73,6 @@ class Crawler
             ]
         ]);
 
-        return true;
+        return $response;
     }
 }
