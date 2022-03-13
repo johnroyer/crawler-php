@@ -73,6 +73,12 @@ class Crawler
             ]
         ]);
 
+        $fetcher = new LinkFetcher(
+            $url,
+            $response
+        );
+        $fetcher->getLinks();
+
         return $response;
     }
 }
