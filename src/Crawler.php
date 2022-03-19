@@ -3,6 +3,7 @@
 namespace Zeroplex\Crawler;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 class Crawler
 {
@@ -62,8 +63,16 @@ class Crawler
     {
         $this->startUrl = $url;
 
-        $httpClient = new Client();
-        $response = $httpClient->get($this->startUrl, [
+        $request = new Request('GET', $this->startUrl);
+        $request->withUri(new \GuzzleHttp\Psr7\Uri($this->startUrl))
+            ->withMethod('GET')
+            ->withHeader(
+                'User-Agent',
+                $this->userAgent,
+            );
+
+        $client = new Client();
+        $response = $client->send($request, [
             'allow_redirects' => $this->allowRedirect,
             'connect_timeout' => $this->timeout,
             'delay' => $this->delay,
