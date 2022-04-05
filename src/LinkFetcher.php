@@ -13,7 +13,7 @@ class LinkFetcher
     protected $response;
     protected $crawler;
 
-    public function __construct(String $url, Response $res)
+    public function __construct(string $url, Response $res)
     {
         $this->url = $url;
         $this->response = $res;
@@ -28,7 +28,6 @@ class LinkFetcher
 
         $links = $this->crawler->filter('a')->links();
 
-        var_dump($links);exit;
         return $links;
     }
 }
