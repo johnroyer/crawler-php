@@ -58,4 +58,27 @@ class ArrayQueueTest extends \PHPUnit\Framework\TestCase
             $queue->pop(),
         );
     }
+
+    public function testToArrayOutputType()
+    {
+        $queue = new ArrayQueue();
+
+        $queue->push(1);
+        $queue->push(2);
+        $queue->push(3);
+
+        $output = $queue->toArray();
+
+        $this->assertIsArray($output);
+
+        return $output;
+    }
+
+    /**
+     * @depends testToArrayOutputType
+     */
+    public function testToArrayContent($output)
+    {
+        $this->assertCount(3, $output);
+    }
 }
