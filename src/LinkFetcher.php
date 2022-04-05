@@ -28,8 +28,6 @@ class LinkFetcher
 
         $links = $this->crawler->filter('a')->links();
 
-        var_dump($links);
-        exit;
         return $links;
     }
 }
