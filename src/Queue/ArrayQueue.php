@@ -56,6 +56,6 @@ class ArrayQueue implements QueueInterface
             $output[] = $val;
         }
 
-        return $val;
+        return $output;
     }
 }
