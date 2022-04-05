@@ -79,7 +79,7 @@ class Crawler
         return $this->delay;
     }
 
-    public function crawl(string $url)
+    public function run(string $url)
     {
         $this->startUrl = $url;
 
