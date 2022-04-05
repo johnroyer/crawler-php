@@ -1,11 +1,11 @@
 <?php
 
-namespace Johnroyer\Crawler\Profile;
+namespace Johnroyer\Crawler\Handler;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-abstract class Profile
+abstract class AbstractHandler
 {
     protected string $domain;
 
