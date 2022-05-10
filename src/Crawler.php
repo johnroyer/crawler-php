@@ -32,6 +32,11 @@ class Crawler
         return $this;
     }
 
+    public function isFollowRedirect()
+    {
+        return $this->allowRedirect;
+    }
+
     public function setTimeout(int $second)
     {
         if (1 >= $second) {
@@ -42,11 +47,21 @@ class Crawler
         return $this;
     }
 
+    public function getTimeout()
+    {
+        $this->timeout;
+    }
+
     public function setUserAgnet(string $agent = '')
     {
         if (!empty($agent)) {
             $this->userAgent = $agent;
         }
+    }
+
+    public function getUserAgent()
+    {
+        return $this->userAgent;
     }
 
     public function setDelay(int $second)
@@ -59,7 +74,12 @@ class Crawler
         return $this;
     }
 
-    public function crawl(string $url)
+    public function getDelay()
+    {
+        return $this->delay;
+    }
+
+    public function run(string $url)
     {
         $this->startUrl = $url;
 
