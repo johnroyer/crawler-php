@@ -102,11 +102,11 @@ class Crawler
             ]
         ]);
 
-        $fetcher = new LinkFetcher(
-            $url,
-            $response
+        $crawler = new \Symfony\Component\DomCrawler\Crawler(
+            $response->getBody()->getContents(),
+            $url
         );
-        $fetcher->getLinks();
+        $links = $crawler->filter('a')->links();
 
         return $response;
     }
