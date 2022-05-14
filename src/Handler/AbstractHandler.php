@@ -7,14 +7,16 @@ use Psr\Http\Message\ResponseInterface;
 
 abstract class AbstractHandler
 {
-    protected string $domain;
-
-    public function getDomain(): string
-    {
-        return $this->domain;
-    }
+    /**
+     * Return the domain name
+     *
+     * return the domain name. protocol and URI excluded.
+     *
+     * @return string
+     */
+    abstract public function getDomain(): string;
 
     abstract function isFatchable(RequestInterface $request): bool;
 
-    abstract function handle(ResponseInterface $response): void;
+    abstract function handler(ResponseInterface $response): void;
 }

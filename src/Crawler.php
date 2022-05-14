@@ -4,6 +4,9 @@ namespace Zeroplex\Crawler;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use Symfony\Component\DomCrawler\Crawler;
+use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class Crawler
 {
@@ -82,32 +85,48 @@ class Crawler
     public function run(string $url)
     {
         $this->startUrl = $url;
+        this->queue = new ArrayQueue();
 
-        $request = new Request('GET', $this->startUrl);
-        $request->withUri(new \GuzzleHttp\Psr7\Uri($this->startUrl))
-            ->withMethod('GET')
-            ->withHeader(
-                'User-Agent',
-                $this->userAgent,
-            );
+        $response = $this->fetch($url);
+        foreach ($this->getLinks($response, $url) as $url) {
+            $this->queue->push($url);
+        }
 
-        $client = new Client();
-        $response = $client->send($request, [
-            'allow_redirects' => $this->allowRedirect,
-            'connect_timeout' => $this->timeout,
-            'delay' => $this->delay,
-            'read_timeout' => $this->timeout,
-            'headers' => [
-                'User-Agent' => $this->userAgent,
-            ]
+        return $response->getBody()->getContents();
+    }
+
+    protected function fetch(string $url): Response
+    {
+        $request = new Request(
+            'GET',
+            $url
+        );
+        $request->withHeader([
+            'User-Agent',
+            $this->userAgent
         ]);
 
-        $crawler = new \Symfony\Component\DomCrawler\Crawler(
+        $client = new Client();
+        $response = $client->send(
+            $request,
+            [
+                'allow_redirects' => $this->allowRedirect,
+                'connect_timeout' => $this->timeout,
+                'delay' => $this->delay,
+                'read_timeout' => $this->timeout
+            ]
+        );
+
+        return $response;
+    }
+
+    protected function getLinks(Response $response, string $url): array
+    {
+        $domCrawler = new \Symfony\Component\DomCrawler\Crawler(
             $response->getBody()->getContents(),
             $url
         );
-        $links = $crawler->filter('a')->links();
 
-        return $response;
+        return $domCrawler->filter('a')->links();
     }
 }
