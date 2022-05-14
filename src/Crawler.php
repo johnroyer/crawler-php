@@ -4,6 +4,7 @@ namespace Zeroplex\Crawler;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class Crawler
 {
@@ -82,6 +83,7 @@ class Crawler
     public function run(string $url)
     {
         $this->startUrl = $url;
+        $this->queue = new ArrayQueue();
 
         $request = new Request('GET', $this->startUrl);
         $request->withUri(new \GuzzleHttp\Psr7\Uri($this->startUrl))
@@ -107,6 +109,10 @@ class Crawler
             $url
         );
         $links = $crawler->filter('a')->links();
+
+        foreach ($links as $url) {
+            $this->queue->push($url);
+        }
 
         return $response;
     }
