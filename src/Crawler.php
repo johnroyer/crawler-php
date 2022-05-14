@@ -4,6 +4,7 @@ namespace Zeroplex\Crawler;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class Crawler
@@ -100,7 +101,7 @@ class Crawler
         return $response;
     }
 
-    protected function fetch(string $url)
+    protected function fetch(string $url): Response
     {
         $request = new Request(
             'GET',
@@ -123,5 +124,15 @@ class Crawler
         );
 
         return $response;
+    }
+
+    protected function getLinks(Response $response, string $url): array
+    {
+        $domCrawler = new \Symfony\Component\DomCrawler\Crawler(
+            $response->getBody()->getContents(),
+            $url
+        );
+
+        return $domCrawler->filter('a')->links();
     }
 }
