@@ -5,6 +5,7 @@ namespace Zeroplex\Crawler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Symfony\Component\DomCrawler\Crawler;
 use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class Crawler
@@ -87,12 +88,7 @@ class Crawler
         this->queue = new ArrayQueue();
 
         $response = $this->fetch($url);
-
-        $crawler = new \Symfony\Component\DomCrawler\Crawler(
-            $response->getBody()->getContents(),
-            $url
-        );
-        $links = $crawler->filter('a')->links();
+        $links = $this->getLinks($response, $url);
 
         foreach ($links as $url) {
             $this->queue->push($url);
