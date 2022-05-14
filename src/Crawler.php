@@ -88,9 +88,7 @@ class Crawler
         this->queue = new ArrayQueue();
 
         $response = $this->fetch($url);
-        $links = $this->getLinks($response, $url);
-
-        foreach ($links as $url) {
+        foreach ($this->getLinks($response, $url) as $url) {
             $this->queue->push($url);
         }
 
