@@ -83,26 +83,9 @@ class Crawler
     public function run(string $url)
     {
         $this->startUrl = $url;
-        $this->queue = new ArrayQueue();
+        this->queue = new ArrayQueue();
 
-        $request = new Request('GET', $this->startUrl);
-        $request->withUri(new \GuzzleHttp\Psr7\Uri($this->startUrl))
-            ->withMethod('GET')
-            ->withHeader(
-                'User-Agent',
-                $this->userAgent,
-            );
-
-        $client = new Client();
-        $response = $client->send($request, [
-            'allow_redirects' => $this->allowRedirect,
-            'connect_timeout' => $this->timeout,
-            'delay' => $this->delay,
-            'read_timeout' => $this->timeout,
-            'headers' => [
-                'User-Agent' => $this->userAgent,
-            ]
-        ]);
+        $response = $this->fetch($url);
 
         $crawler = new \Symfony\Component\DomCrawler\Crawler(
             $response->getBody()->getContents(),
@@ -113,6 +96,31 @@ class Crawler
         foreach ($links as $url) {
             $this->queue->push($url);
         }
+
+        return $response;
+    }
+
+    protected function fetch(string $url)
+    {
+        $request = new Request(
+            'GET',
+            $url
+        );
+        $request->withHeader([
+            'User-Agent',
+            $this->userAgent
+        ]);
+
+        $client = new Client();
+        $response = $client->send(
+            $request,
+            [
+                'allow_redirects' => $this->allowRedirect,
+                'connect_timeout' => $this->timeout,
+                'delay' => $this->delay,
+                'read_timeout' => $this->timeout
+            ]
+        );
 
         return $response;
     }
