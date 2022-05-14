@@ -92,7 +92,7 @@ class Crawler
             $this->queue->push($url);
         }
 
-        return $response;
+        return $response->getBody()->getContents();
     }
 
     protected function fetch(string $url): Response
