@@ -18,5 +18,5 @@ abstract class AbstractHandler
 
     abstract function isFatchable(RequestInterface $request): bool;
 
-    abstract function handle(ResponseInterface $response): void;
+    abstract function handler(ResponseInterface $response): void;
 }
