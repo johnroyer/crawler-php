@@ -8,7 +8,6 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class LinkFetcher
 {
-    protected $links = [];
     protected $url;
     protected $response;
     protected $crawler;
