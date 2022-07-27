@@ -84,7 +84,7 @@ class Crawler
     public function run(string $url)
     {
         $this->startUrl = $url;
-        this->queue = new ArrayQueue();
+        $this->queue = new ArrayQueue();
 
         $response = $this->fetch($url);
         foreach ($this->getLinks($response, $url) as $url) {
@@ -121,11 +121,44 @@ class Crawler
 
     protected function getLinks(Response $response, string $url): array
     {
-        $domCrawler = new \Symfony\Component\DomCrawler\Crawler(
-            $response->getBody()->getContents(),
+        $endoing = '';
+        $html = $response->getBody()->getContents();
+        $result = preg_match('/meta charset=\"([^\"]+)\"/u', $html, $matchs);
+        if (false === $result) {
+            $endoing = 'UTF-8';
+        } else {
+            $setting = strtoupper($matchs[1]);
+            if (in_array($setting, mb_list_encodings())) {
+                $endoing = $setting;
+            } else {
+                $endoing = 'UTF-8';
+            }
+        }
+
+        $links = [];
+        $crawler = new \Symfony\Component\DomCrawler\Crawler(
+            '',
             $url
         );
+        $crawler->addHtmlContent($html, $endoing);
 
-        return $domCrawler->filter('a')->links();
+        $urls = $crawler->filter('a')->links();
+        foreach ($urls as $url) {
+            $links[] = $url->getUri();
+        }
+
+        $refs = $crawler->filter('link')->links();
+        foreach ($refs as $ref) {
+            $links[] = $ref->getUri();
+        }
+
+        $urls = $crawler->filter('img')->extract(['src']);
+        foreach ($urls as $url) {
+            if (1 !== preg_match('/^data:image/', $url)) {
+                $links[] = $url;
+            }
+        }
+
+        return $links;
     }
 }
