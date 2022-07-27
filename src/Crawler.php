@@ -136,14 +136,14 @@ class Crawler
         }
 
         $links = [];
-        $domCrawler = new \Symfony\Component\DomCrawler\Crawler(
-            $response->getBody()->getContents(),
+        $crawler = new \Symfony\Component\DomCrawler\Crawler(
+            '',
             $url
         );
         $crawler->addHtmlContent($html, $endoing);
 
-        $links = $domCrawler->filter('a')->links();
-        $links = array_merge($links, $domCrawler->filter('link')->links());
+        $links = $crawler->filter('a')->links();
+        $links = array_merge($links, $crawler->filter('link')->links());
 
         $url = [];
         foreach ($links as $link) {
