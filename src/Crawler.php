@@ -129,6 +129,12 @@ class Crawler
 
         $links = $domCrawler->filter('a')->links();
 
-        return $links;
+        $url = [];
+        foreach ($links as $link) {
+            $url[] = $link->getUri();
+        }
+        var_dump($url);
+
+        return $url;
     }
 }
