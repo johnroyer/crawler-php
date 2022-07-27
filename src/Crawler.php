@@ -121,11 +121,14 @@ class Crawler
 
     protected function getLinks(Response $response, string $url): array
     {
+        $links = [];
         $domCrawler = new \Symfony\Component\DomCrawler\Crawler(
             $response->getBody()->getContents(),
             $url
         );
 
-        return $domCrawler->filter('a')->links();
+        $links = $domCrawler->filter('a')->links();
+
+        return $links;
     }
 }
