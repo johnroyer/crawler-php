@@ -5,7 +5,6 @@ namespace Zeroplex\Crawler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use Symfony\Component\DomCrawler\Crawler;
 use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class Crawler
