@@ -84,7 +84,7 @@ class Crawler
     public function run(string $url)
     {
         $this->startUrl = $url;
-        this->queue = new ArrayQueue();
+        $this->queue = new ArrayQueue();
 
         $response = $this->fetch($url);
         foreach ($this->getLinks($response, $url) as $url) {
