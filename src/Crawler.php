@@ -121,11 +121,26 @@ class Crawler
 
     protected function getLinks(Response $response, string $url): array
     {
+        $endoing = '';
+        $html = $response->getBody()->getContents();
+        $result = preg_match('/meta charset=\"([^\"]+)\"/u', $html, $matchs);
+        if (false === $result) {
+            $endoing = 'UTF-8';
+        } else {
+            $setting = strtoupper($matchs[1]);
+            if (in_array($setting, mb_list_encodings())) {
+                $endoing = $setting;
+            } else {
+                $endoing = 'UTF-8';
+            }
+        }
+
         $links = [];
         $domCrawler = new \Symfony\Component\DomCrawler\Crawler(
             $response->getBody()->getContents(),
             $url
         );
+        $crawler->addHtmlContent($html, $endoing);
 
         $links = $domCrawler->filter('a')->links();
         $links = array_merge($links, $domCrawler->filter('link')->links());
