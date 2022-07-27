@@ -128,6 +128,7 @@ class Crawler
         );
 
         $links = $domCrawler->filter('a')->links();
+        $links = array_merge($links, $domCrawler->filter('link')->links());
 
         $url = [];
         foreach ($links as $link) {
