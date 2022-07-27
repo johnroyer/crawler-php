@@ -142,13 +142,23 @@ class Crawler
         );
         $crawler->addHtmlContent($html, $endoing);
 
+
         $links = $crawler->filter('a')->links();
         $links = array_merge($links, $crawler->filter('link')->links());
+
+        $imageUrl = [];
+        $urls = $crawler->filter('img')->extract(['src']);
+        foreach ($urls as $url) {
+            if (1 !== preg_match('/^data:image/', $url)) {
+                $imageUrl[] = $url;
+            }
+        }
 
         $url = [];
         foreach ($links as $link) {
             $url[] = $link->getUri();
         }
+        $url = array_merge($url, $imageUrl);
 
         return $url;
     }
