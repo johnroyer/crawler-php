@@ -149,7 +149,6 @@ class Crawler
         foreach ($links as $link) {
             $url[] = $link->getUri();
         }
-        var_dump($url);
 
         return $url;
     }
