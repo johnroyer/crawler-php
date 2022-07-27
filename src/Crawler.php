@@ -142,24 +142,23 @@ class Crawler
         );
         $crawler->addHtmlContent($html, $endoing);
 
+        $urls = $crawler->filter('a')->links();
+        foreach ($urls as $url) {
+            $links[] = $url->getUri();
+        }
 
-        $links = $crawler->filter('a')->links();
-        $links = array_merge($links, $crawler->filter('link')->links());
+        $refs = $crawler->filter('link')->links();
+        foreach ($refs as $ref) {
+            $links[] = $ref->getUri();
+        }
 
-        $imageUrl = [];
         $urls = $crawler->filter('img')->extract(['src']);
         foreach ($urls as $url) {
             if (1 !== preg_match('/^data:image/', $url)) {
-                $imageUrl[] = $url;
+                $links[] = $url;
             }
         }
 
-        $url = [];
-        foreach ($links as $link) {
-            $url[] = $link->getUri();
-        }
-        $url = array_merge($url, $imageUrl);
-
-        return $url;
+        return $links;
     }
 }
