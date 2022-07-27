@@ -100,10 +100,10 @@ class Crawler
             'GET',
             $url
         );
-        $request->withHeader([
+        $request->withHeader(
             'User-Agent',
             $this->userAgent
-        ]);
+        );
 
         $client = new Client();
         $response = $client->send(
