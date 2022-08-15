@@ -6,17 +6,31 @@ use Zeroplex\Crawler\Crawler;
 
 class CrawlerTest extends TestCase
 {
-    private $cawler = null;
+    private $crawler = null;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->cawler = new Crawler();
+        $this->crawler = new Crawler();
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
-        $this->cawler = null;
+        $this->crawler = null;
+    }
+
+    public function testAllowRedirect()
+    {
+        $this->crawler->setFollowRedirect(true);
+
+        $this->assertTrue($this->crawler->isFollowRedirect());
+    }
+
+    public function testNotAllowRedirect()
+    {
+        $this->crawler->setFollowRedirect(false);
+
+        $this->assertFalse($this->crawler->isFollowRedirect());
     }
 }
