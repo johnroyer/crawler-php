@@ -14,27 +14,26 @@ class Crawler
     protected $timeout = 10;
     protected $delay = 0;
     protected $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
+    protected $response;
 
     /**
      */
     public function __construct()
     {
-        // initialize options
     }
 
     public function __destruct()
     {
-        // TODO: save crawler status
     }
 
-    public function setFollowRedirect()
+    public function setFollowRedirect(bool $allowable): Crawler
     {
-        $this->allowRedirect = true;
+        $this->allowRedirect = $allowable;
 
         return $this;
     }
 
-    public function isFollowRedirect()
+    public function isFollowRedirect(): bool
     {
         return $this->allowRedirect;
     }
@@ -86,12 +85,12 @@ class Crawler
         $this->startUrl = $url;
         $this->queue = new ArrayQueue();
 
-        $response = $this->fetch($url);
-        foreach ($this->getLinks($response, $url) as $url) {
+        $this->response = $this->fetch($url);
+        foreach ($this->getLinks($this->response, $url) as $url) {
             $this->queue->push($url);
         }
 
-        return $response->getBody()->getContents();
+        return $this->response->getBody()->getContents();
     }
 
     protected function fetch(string $url): Response
@@ -106,7 +105,7 @@ class Crawler
         );
 
         $client = new Client();
-        $response = $client->send(
+        $this->response = $client->send(
             $request,
             [
                 'allow_redirects' => $this->allowRedirect,
@@ -116,12 +115,11 @@ class Crawler
             ]
         );
 
-        return $response;
+        return $this->response;
     }
 
     protected function getLinks(Response $response, string $url): array
     {
-        $endoing = '';
         $html = $response->getBody()->getContents();
         $result = preg_match('/meta charset=\"([^\"]+)\"/u', $html, $matchs);
         if (false === $result) {
