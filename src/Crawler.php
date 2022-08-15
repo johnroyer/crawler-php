@@ -120,7 +120,6 @@ class Crawler
 
     protected function getLinks(Response $response, string $url): array
     {
-        $endoing = '';
         $html = $response->getBody()->getContents();
         $result = preg_match('/meta charset=\"([^\"]+)\"/u', $html, $matchs);
         if (false === $result) {
