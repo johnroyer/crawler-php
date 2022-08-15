@@ -26,9 +26,9 @@ class Crawler
     {
     }
 
-    public function setFollowRedirect(): void
+    public function setFollowRedirect(bool $allowable): Crawler
     {
-        $this->allowRedirect = true;
+        $this->allowRedirect = $allowable;
 
         return $this;
     }
