@@ -26,14 +26,14 @@ class Crawler
     {
     }
 
-    public function setFollowRedirect()
+    public function setFollowRedirect(): void
     {
         $this->allowRedirect = true;
 
         return $this;
     }
 
-    public function isFollowRedirect()
+    public function isFollowRedirect(): bool
     {
         return $this->allowRedirect;
     }
