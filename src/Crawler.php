@@ -40,8 +40,8 @@ class Crawler
 
     public function setTimeout(int $second): Crawler
     {
-        if (1 >= $second) {
-            throw new \Exception('timeout must larager then 1');
+        if (1 > $second) {
+            throw new \Exception('timeout must equal or larager then 1');
         }
         $this->timeout = $second;
 
