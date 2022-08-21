@@ -38,7 +38,7 @@ class Crawler
         return $this->allowRedirect;
     }
 
-    public function setTimeout(int $second)
+    public function setTimeout(int $second): Crawler
     {
         if (1 >= $second) {
             throw new \Exception('timeout must larager then 1');
@@ -48,7 +48,7 @@ class Crawler
         return $this;
     }
 
-    public function getTimeout()
+    public function getTimeout(): int
     {
         return $this->timeout;
     }
