@@ -54,4 +54,27 @@ class CrawlerTest extends TestCase
 
         $this->crawler->setTimeout($timeoutSeconds);
     }
+
+    public function testUserAgentSetting()
+    {
+        $agent = 'Firefox';
+
+        $this->crawler->setUserAgnet($agent);
+
+        $this->assertEquals(
+            $agent,
+            $this->crawler->getUserAgent()
+        );
+    }
+
+    public function testUserAgentIsEmptyString()
+    {
+        $this->crawler->setUserAgnet('');
+
+        // user agent can be empty string (works as "reset user agent")
+        $this->assertEquals(
+            '',
+            $this->crawler->getUserAgent()
+        );
+    }
 }
