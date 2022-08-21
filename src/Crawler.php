@@ -53,14 +53,14 @@ class Crawler
         return $this->timeout;
     }
 
-    public function setUserAgnet(string $agent = '')
+    public function setUserAgnet(string $agent = ''): Crawler
     {
         if (!empty($agent)) {
             $this->userAgent = $agent;
         }
     }
 
-    public function getUserAgent()
+    public function getUserAgent(): string
     {
         return $this->userAgent;
     }
