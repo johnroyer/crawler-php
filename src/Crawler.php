@@ -55,6 +55,7 @@ class Crawler
 
     public function setUserAgnet(string $agent = ''): Crawler
     {
+        $this->userAgent = $agent;
         return $this;
     }
 
