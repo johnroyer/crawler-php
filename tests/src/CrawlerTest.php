@@ -33,4 +33,25 @@ class CrawlerTest extends TestCase
 
         $this->assertFalse($this->crawler->isFollowRedirect());
     }
+
+    public function testSetTimeoutSecond()
+    {
+        $timeoutSeconds = 10;
+
+        $this->crawler->setTimeout($timeoutSeconds);
+
+        $this->assertEquals(
+            $timeoutSeconds,
+            $this->crawler->getTimeout()
+        );
+    }
+
+    public function testTimeoutLessThenOne()
+    {
+        $timeoutSeconds = 0;
+
+        $this->expectException(\Exception::class);
+
+        $this->crawler->setTimeout($timeoutSeconds);
+    }
 }
