@@ -50,7 +50,7 @@ class Crawler
 
     public function getTimeout()
     {
-        $this->timeout;
+        return $this->timeout;
     }
 
     public function setUserAgnet(string $agent = '')
