@@ -67,7 +67,7 @@ class CrawlerTest extends TestCase
         );
     }
 
-    public function testUserAgentIsEmptyString()
+    public function testUserAgentAsEmptyString()
     {
         $this->crawler->setUserAgnet('');
 
