@@ -69,7 +69,7 @@ class Crawler
      *
      * please be polite.
      */
-    public function setDelay(int $second)
+    public function setDelay(int $second): Crawler
     {
         if (0 > $second) {
             throw  new \Exception('delay must be 0 or bigger');
@@ -79,7 +79,7 @@ class Crawler
         return $this;
     }
 
-    public function getDelay()
+    public function getDelay(): int
     {
         return $this->delay;
     }
