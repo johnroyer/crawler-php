@@ -64,6 +64,11 @@ class Crawler
         return $this->userAgent;
     }
 
+    /**
+     * Delay seconds between requests
+     *
+     * please be polite.
+     */
     public function setDelay(int $second)
     {
         if (0 > $second) {
