@@ -77,4 +77,23 @@ class CrawlerTest extends TestCase
             $this->crawler->getUserAgent()
         );
     }
+
+    public function testDelayTime()
+    {
+        $delay = 10;
+        $this->crawler->setDelay($delay);
+
+        $this->assertEquals(
+            $delay,
+            $this->crawler->getDelay()
+        );
+    }
+
+    public function testInvalidDelayTime()
+    {
+        $delay = -1;
+
+        $this->expectException(\Exception::class);
+        $this->crawler->setDelay($delay);
+    }
 }
