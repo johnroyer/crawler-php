@@ -33,4 +33,67 @@ class CrawlerTest extends TestCase
 
         $this->assertFalse($this->crawler->isFollowRedirect());
     }
+
+    public function testSetTimeoutSecond()
+    {
+        $timeoutSeconds = 10;
+
+        $this->crawler->setTimeout($timeoutSeconds);
+
+        $this->assertEquals(
+            $timeoutSeconds,
+            $this->crawler->getTimeout()
+        );
+    }
+
+    public function testTimeoutLessThenOne()
+    {
+        $timeoutSeconds = 0;
+
+        $this->expectException(\Exception::class);
+
+        $this->crawler->setTimeout($timeoutSeconds);
+    }
+
+    public function testUserAgentSetting()
+    {
+        $agent = 'Firefox';
+
+        $this->crawler->setUserAgnet($agent);
+
+        $this->assertEquals(
+            $agent,
+            $this->crawler->getUserAgent()
+        );
+    }
+
+    public function testUserAgentAsEmptyString()
+    {
+        $this->crawler->setUserAgnet('');
+
+        // user agent can be empty string (works as "reset user agent")
+        $this->assertEquals(
+            '',
+            $this->crawler->getUserAgent()
+        );
+    }
+
+    public function testDelayTime()
+    {
+        $delay = 10;
+        $this->crawler->setDelay($delay);
+
+        $this->assertEquals(
+            $delay,
+            $this->crawler->getDelay()
+        );
+    }
+
+    public function testInvalidDelayTime()
+    {
+        $delay = -1;
+
+        $this->expectException(\Exception::class);
+        $this->crawler->setDelay($delay);
+    }
 }

@@ -38,34 +38,38 @@ class Crawler
         return $this->allowRedirect;
     }
 
-    public function setTimeout(int $second)
+    public function setTimeout(int $second): Crawler
     {
-        if (1 >= $second) {
-            throw new \Exception('timeout must larager then 1');
+        if (1 > $second) {
+            throw new \Exception('timeout must equal or larager then 1');
         }
         $this->timeout = $second;
 
         return $this;
     }
 
-    public function getTimeout()
+    public function getTimeout(): int
     {
-        $this->timeout;
+        return $this->timeout;
     }
 
-    public function setUserAgnet(string $agent = '')
+    public function setUserAgnet(string $agent = ''): Crawler
     {
-        if (!empty($agent)) {
-            $this->userAgent = $agent;
-        }
+        $this->userAgent = $agent;
+        return $this;
     }
 
-    public function getUserAgent()
+    public function getUserAgent(): string
     {
         return $this->userAgent;
     }
 
-    public function setDelay(int $second)
+    /**
+     * Delay seconds between requests
+     *
+     * please be polite.
+     */
+    public function setDelay(int $second): Crawler
     {
         if (0 > $second) {
             throw  new \Exception('delay must be 0 or bigger');
@@ -75,7 +79,7 @@ class Crawler
         return $this;
     }
 
-    public function getDelay()
+    public function getDelay(): int
     {
         return $this->delay;
     }
