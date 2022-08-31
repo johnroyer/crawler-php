@@ -16,16 +16,18 @@ class Crawler
     protected $delay = 0;
     protected $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
     protected $response;
-    protected $handlers = [];
+    protected $domainHandler;
 
     /**
      */
     public function __construct()
     {
+        $this->domainHandler = new ResultHandler();
     }
 
     public function __destruct()
     {
+        $this->domainHandler = null;
     }
 
     public function setFollowRedirect(bool $allowable): Crawler
