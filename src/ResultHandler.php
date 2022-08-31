@@ -38,4 +38,15 @@ class ResultHandler
         }
         return $this->handlers[$domain];
     }
+
+    public function deleteHandler(AbstractHandler $handler)
+    {
+        $domain = filter_var($handler->getDomain(), FILTER_VALIDATE_DOMAIN);
+        if (!array_key_exists($domain, $this->handlers)) {
+            throw new \Exception('handler not found');
+        }
+
+        unset($this->handlers[$domain]);
+        return true;
+    }
 }
