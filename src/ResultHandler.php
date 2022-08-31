@@ -49,4 +49,9 @@ class ResultHandler
         unset($this->handlers[$domain]);
         return true;
     }
+
+    public function listDomainsHandled(): array
+    {
+        return array_keys($this->handlers);
+    }
 }
