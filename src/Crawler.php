@@ -5,6 +5,7 @@ namespace Zeroplex\Crawler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class Crawler
@@ -15,6 +16,7 @@ class Crawler
     protected $delay = 0;
     protected $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
     protected $response;
+    protected $handlers = [];
 
     /**
      */
@@ -82,6 +84,26 @@ class Crawler
     public function getDelay(): int
     {
         return $this->delay;
+    }
+
+    public function addHandler(AbstractHandler $handler): Crawler
+    {
+        $filtered = filter_var($handler->getDomain(), FILTER_VALIDATE_DOMAIN);
+        if (false === $filtered) {
+            throw new \Exception( 'handler do not set a valid domain' );
+        }
+        $this->handlers[] = $handler;
+        return $this;
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
+    }
+
+    public function deleteHandler(AbstractHandler $handler): Crawler
+    {
+        // TODO
     }
 
     public function run(string $url)
