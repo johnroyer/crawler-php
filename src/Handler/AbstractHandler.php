@@ -1,6 +1,6 @@
 <?php
 
-namespace Johnroyer\Crawler\Handler;
+namespace Zeroplex\Crawler\Handler;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
