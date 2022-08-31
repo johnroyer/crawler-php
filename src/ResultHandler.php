@@ -18,7 +18,7 @@ class ResultHandler
         $this->handlers = null;
     }
 
-    public function addHandler(AbstractHandler $handler): ResultHandler
+    public function addHandler(AbstractHandler $handler): bool
     {
         $domain = filter_var($handler->getDomain(), FILTER_VALIDATE_DOMAIN);
         if (false === $domain) {
@@ -29,7 +29,7 @@ class ResultHandler
         }
         $this->handlers[$domain] = $domain;
 
-        return $this;
+        return true;
     }
 
     public function getHandler(string $domain): ?AbstractHandler
@@ -40,13 +40,12 @@ class ResultHandler
         return $this->handlers[$domain];
     }
 
-    public function deleteHandler(AbstractHandler $handler)
+    public function deleteHandler(AbstractHandler $handler): bool
     {
         $domain = filter_var($handler->getDomain(), FILTER_VALIDATE_DOMAIN);
         if (!array_key_exists($domain, $this->handlers)) {
-            throw new \Exception('handler not found');
+            return false;
         }
-
         unset($this->handlers[$domain]);
         return true;
     }
