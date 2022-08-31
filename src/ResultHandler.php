@@ -30,4 +30,12 @@ class ResultHandler
 
         return $this;
     }
+
+    public function getHandler(string $domain): ?AbstractHandler
+    {
+        if (!array_key_exists($domain, $this->handlers)) {
+            return null;
+        }
+        return $this->handlers[$domain];
+    }
 }
