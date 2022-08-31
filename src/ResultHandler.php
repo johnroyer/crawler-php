@@ -20,10 +20,7 @@ class ResultHandler
 
     public function addHandler(AbstractHandler $handler): bool
     {
-        $domain = filter_var($handler->getDomain(), FILTER_VALIDATE_DOMAIN);
-        if (false === $domain) {
-            throw new \Exception('Handler does not have a valid domain');
-        }
+        $domain = $handler->getDomain();
         if (array_key_exists($domain, $this->handlers)) {
             throw new \Exception('Duplicated handler');
         }
@@ -42,7 +39,7 @@ class ResultHandler
 
     public function deleteHandler(AbstractHandler $handler): bool
     {
-        $domain = filter_var($handler->getDomain(), FILTER_VALIDATE_DOMAIN);
+        $domain = $handler->getDomain();
         if (!array_key_exists($domain, $this->handlers)) {
             return false;
         }
