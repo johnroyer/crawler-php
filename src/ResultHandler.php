@@ -6,10 +6,11 @@ use Zeroplex\Crawler\Handler\AbstractHandler;
 
 class ResultHandler
 {
-    protected $handlers = [];
+    protected $handlers;
 
     public function __construct()
     {
+        $this->handlers = [];
     }
 
     public function __destruct()
