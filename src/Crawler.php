@@ -90,22 +90,18 @@ class Crawler
 
     public function addHandler(AbstractHandler $handler): Crawler
     {
-        $filtered = filter_var($handler->getDomain(), FILTER_VALIDATE_DOMAIN);
-        if (false === $filtered) {
-            throw new \Exception( 'handler do not set a valid domain' );
-        }
-        $this->handlers[] = $handler;
-        return $this;
+        return $this->domainHandler->addHandler($handler);
     }
 
     public function getHandlers(): array
     {
-        return $this->handlers;
+        return $this->domainHandler->listDomainsHandled();
     }
 
     public function deleteHandler(AbstractHandler $handler): Crawler
     {
-        // TODO
+        $this->domainHandler->deleteHandler($handler);
+        return $this;
     }
 
     public function run(string $url)
