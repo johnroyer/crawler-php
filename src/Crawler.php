@@ -30,9 +30,9 @@ class Crawler
         $this->domainHandler = null;
     }
 
-    public function setFollowRedirect(bool $allowable): Crawler
+    public function setFollowRedirect(bool $follow): Crawler
     {
-        $this->allowRedirect = $allowable;
+        $this->allowRedirect = $follow;
 
         return $this;
     }
