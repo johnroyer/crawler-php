@@ -30,6 +30,12 @@ class Crawler
         $this->domainHandler = null;
     }
 
+    /**
+     * Follow HTTP redirect
+     *
+     * @param bool $follow true if crawler should follow redirect, false if not
+     * @return $this
+     */
     public function setFollowRedirect(bool $follow): Crawler
     {
         $this->allowRedirect = $follow;
@@ -37,11 +43,23 @@ class Crawler
         return $this;
     }
 
+    /**
+     * Check if crawler will follow HTTP redirect
+     * 
+     * @return bool true if follow redirect, false if not
+     */
     public function isFollowRedirect(): bool
     {
         return $this->allowRedirect;
     }
 
+    /**
+     * Set HTTP request timeout in seconds
+     *
+     * @param int $second HTTP request timeout in seconds, equals or larger then 1
+     * @return $this
+     * @throws \Exception if input value is not valid
+     */
     public function setTimeout(int $second): Crawler
     {
         if (1 > $second) {
@@ -52,26 +70,44 @@ class Crawler
         return $this;
     }
 
+    /**
+     * Get HTTP request timeout in seconds
+     *
+     * @return int
+     */
     public function getTimeout(): int
     {
         return $this->timeout;
     }
 
+    /**
+     * Set user agent for crawler
+     *
+     * @param string $agent user agent name
+     * @return $this
+     */
     public function setUserAgnet(string $agent = ''): Crawler
     {
         $this->userAgent = $agent;
         return $this;
     }
 
+    /**
+     * Get user agent name
+     *
+     * @return string name of user agent
+     */
     public function getUserAgent(): string
     {
         return $this->userAgent;
     }
 
     /**
-     * Delay seconds between requests
+     * Time delays between HTTP requests
      *
-     * please be polite.
+     * @param int $second time between HTTP requests
+     * @return $this
+     * @throws \Exception if input is not valid
      */
     public function setDelay(int $second): Crawler
     {
@@ -83,27 +119,56 @@ class Crawler
         return $this;
     }
 
+    /**
+     * Get time delays between HTTP requests
+     *
+     * @return int time deplay between HTTP requests
+     */
     public function getDelay(): int
     {
         return $this->delay;
     }
 
+    /**
+     * Add handler for specific domain
+     *
+     * @param AbstractHandler $handler domain handler
+     * @return bool true if success, false if not
+     * @throws \Exception if input is not valid
+     */
     public function addHandler(AbstractHandler $handler): bool
     {
         return $this->domainHandler->addHandler($handler);
     }
 
+    /**
+     * Get all domain handlers
+     *
+     * @return array all domain handlers in array
+     */
     public function getHandlers(): array
     {
         return $this->domainHandler->listDomainsHandled();
     }
 
+    /**
+     * Delete specific domain handler
+     *
+     * @param AbstractHandler $handler domain handler which to delete
+     * @return $this
+     */
     public function deleteHandler(AbstractHandler $handler): Crawler
     {
         $this->domainHandler->deleteHandler($handler);
         return $this;
     }
 
+    /**
+     * Start to crawl web pages
+     *
+     * @param string $url Url that starts from
+     * @return string web page content
+     */
     public function run(string $url)
     {
         $this->startUrl = $url;
@@ -117,6 +182,13 @@ class Crawler
         return $this->response->getBody()->getContents();
     }
 
+    /**
+     * Fetch web page content from URL
+     *
+     * @param string $url URL to crawl
+     * @return Response HTTP response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     protected function fetch(string $url): Response
     {
         $request = new Request(
@@ -142,6 +214,13 @@ class Crawler
         return $this->response;
     }
 
+    /**
+     * Get pages links and assets links from HTTP response
+     *
+     * @param Response $response HTTP response
+     * @param string $url URL of the HTTP response
+     * @return array URLs in array
+     */
     protected function getLinks(Response $response, string $url): array
     {
         $html = $response->getBody()->getContents();
