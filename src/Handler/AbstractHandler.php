@@ -16,7 +16,7 @@ abstract class AbstractHandler
      */
     abstract public function getDomain(): string;
 
-    abstract function souldFetch(RequestInterface $request): bool;
+    abstract function shouldFetch(RequestInterface $request): bool;
 
     abstract function handler(ResponseInterface $response): void;
 }
