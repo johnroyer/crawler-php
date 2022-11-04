@@ -88,7 +88,7 @@ class Crawler
         return $this->delay;
     }
 
-    public function addHandler(AbstractHandler $handler): Crawler
+    public function addHandler(AbstractHandler $handler): bool
     {
         return $this->domainHandler->addHandler($handler);
     }
