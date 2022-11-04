@@ -48,9 +48,8 @@ interface QueueInterface
     /**
      * Convert queue data into an array.
      *
-     * Notice: make sure that queue behaviour
-     * will NOT affected by the returned array. If you return
-     * the array with same reference used in object, it is dangerous.
+     * Notice: make sure that queue behaviour will NOT be affected by the returned array.
+     * It is dangerous if you return the array with same reference used in object.
      *
      * @return array
      */
