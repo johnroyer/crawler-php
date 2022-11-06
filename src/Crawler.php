@@ -174,12 +174,22 @@ class Crawler
         $this->startUrl = $url;
         $this->queue = new ArrayQueue();
 
+        // check if handler for startUrl exists
+
+        // check if startUrl should be fetched
+
+        // fetch content from startUrl
         $this->response = $this->fetch($url);
+
+        // pass content to hander
+        // $this->response->getBody()->getContents();
+
+        // get links from content, and add them to queue
         foreach ($this->getLinks($this->response, $url) as $url) {
             $this->queue->push($url);
         }
 
-        return $this->response->getBody()->getContents();
+        // next
     }
 
     /**
