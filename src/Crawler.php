@@ -152,6 +152,17 @@ class Crawler
     }
 
     /**
+     * Find domain handler by domain name
+     *
+     * @param string $domain
+     * @return AbstractHandler|null
+     */
+    public function getHandlerByDomain(string $domain): ?AbstractHandler
+    {
+        return $this->domainHandler->getHandler($domain);
+    }
+
+    /**
      * Delete specific domain handler
      *
      * @param AbstractHandler $handler domain handler which to delete
