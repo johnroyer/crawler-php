@@ -189,6 +189,11 @@ class Crawler
         $request = new Request('GET', $url);
 
         // check if startUrl should be fetched
+        $handler = $this->domainHandler->getHandler($request->getUri()->getHost());
+        if (null === $handler) {
+            return;
+        }
+        $shouldFetch = $handler->shouldFetch($request);
 
         // fetch content from startUrl
         $this->response = $this->fetch($url);
