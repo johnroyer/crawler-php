@@ -175,6 +175,7 @@ class Crawler
         $this->queue = new ArrayQueue();
 
         // check if handler for startUrl exists
+        $request = new Request('GET', $url);
 
         // check if startUrl should be fetched
 
