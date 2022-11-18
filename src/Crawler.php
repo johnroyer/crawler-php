@@ -203,6 +203,15 @@ class Crawler
 
         // get links from content, and add them to queue
         foreach ($this->getLinks($this->response, $url) as $url) {
+            $request = new Request('GET', $url);
+            $handler = $this->domainHandler->getHandler($request->getUri()->getHost());
+            if (null === $handler) {
+                continue;
+            }
+            if (!$handler->shouldFetch($request)) {
+                continue;
+            }
+
             $this->queue->push($url);
         }
 
