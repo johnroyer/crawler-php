@@ -193,7 +193,10 @@ class Crawler
         if (null === $handler) {
             return;
         }
-        $shouldFetch = $handler->shouldFetch($request);
+        if (!$handler->shouldFetch($request)) {
+            // nothing to fetch
+            return;
+        }
 
         // fetch content from startUrl
         $this->response = $this->fetch($url);
