@@ -180,7 +180,7 @@ class Crawler
      * @param string $url Url that starts from
      * @return string web page content
      */
-    public function run(string $url)
+    public function run(string $url): void
     {
         $this->startUrl = $url;
         $this->queue = new ArrayQueue();
