@@ -218,7 +218,7 @@ class Crawler
         // invoke handler to deal with content
         $this->domainHandler
             ->getHandler($request->getUri()->getHost())
-            ->handler($response);
+            ->handle($response);
 
         // get links from content, and add them to queue
         foreach ($this->getLinks($response, $url) as $url) {
