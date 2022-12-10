@@ -175,6 +175,24 @@ class Crawler
     }
 
     /**
+     * figure out if URL shoud be fetched
+     * @param Request $request
+     * @return bool
+     */
+    public function shouldFetch(Request $request): bool
+    {
+        $handler = $this->domainHandler->getHandler($request->getUri()->getHost());
+        if (null === $handler) {
+            return false;
+        }
+        if (!$handler->shouldFetch($request)) {
+            // nothing to fetch
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Start to crawl web pages
      *
      * @param string $url Url that starts from
