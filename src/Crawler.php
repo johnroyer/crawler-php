@@ -207,12 +207,8 @@ class Crawler
         $request = new Request('GET', $url);
 
         // check if startUrl should be fetched
-        $handler = $this->domainHandler->getHandler($request->getUri()->getHost());
-        if (null === $handler) {
-            return;
-        }
-        if (!$handler->shouldFetch($request)) {
-            // nothing to fetch
+        if (!$this->shouldFetch($request)) {
+            throw new \Exception('This URL will not be crawled: ' . $url);
             return;
         }
 
@@ -225,11 +221,8 @@ class Crawler
         // get links from content, and add them to queue
         foreach ($this->getLinks($response, $url) as $url) {
             $request = new Request('GET', $url);
-            $handler = $this->domainHandler->getHandler($request->getUri()->getHost());
-            if (null === $handler) {
-                continue;
-            }
-            if (!$handler->shouldFetch($request)) {
+
+            if (!$this->shouldFetch($request)) {
                 continue;
             }
 
