@@ -185,11 +185,7 @@ class Crawler
         if (null === $handler) {
             return false;
         }
-        if (!$handler->shouldFetch($request)) {
-            // nothing to fetch
-            return false;
-        }
-        return true;
+        return $handler->shouldFetch($request);
     }
 
     /**
