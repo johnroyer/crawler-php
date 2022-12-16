@@ -10,13 +10,13 @@ use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class Crawler
 {
-    protected $startUrl = '';
-    protected $allowRedirect = false;
-    protected $timeout = 10;
-    protected $delay = 0;
-    protected $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
-    protected $response;
-    protected $domainHandler;
+    protected string $startUrl = '';
+    protected bool $allowRedirect = false;
+    protected int $timeout = 10;
+    protected int $delay = 0;
+    protected string $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
+    protected Response $response;
+    protected ?ResultHandler $domainHandler;
 
     /**
      */
