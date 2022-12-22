@@ -98,11 +98,12 @@ class CrawlerTest extends TestCase
         $this->crawler->setDelay($delay);
     }
 
-    protected function makeTestingHandler(): AbstractHandler
+    protected function makeTestingHandlerWhichReturns(bool $returns): AbstractHandler
     {
         $handler = $this->createMock(AbstractHandler::class)
             ->expects($this->once())
-            ->method('shouldFetch');
+            ->method('shouldFetch')
+            ->willReturn($returns);
         return $handler;
     }
 }
