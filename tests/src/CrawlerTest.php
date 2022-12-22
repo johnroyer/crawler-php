@@ -96,4 +96,30 @@ class CrawlerTest extends TestCase
         $this->expectException(\Exception::class);
         $this->crawler->setDelay($delay);
     }
+
+    protected function makeTestingHandler(): AbstractHandler
+    {
+        $handler = new class extends AbstractHandler
+        {
+            public function getDomain(): string
+            {
+                return 'zeroplex.tw';
+            }
+
+            public function shouldFetch(RequestInterface $request): bool
+            {
+                // TODO: Implement shouldFetch() method.
+                if ($request->getUri()->getHost() == $this->getDomain()) {
+                    return true;
+                }
+                return false;
+            }
+
+            public function handle(ResponseInterface $response): void
+            {
+                // TODO: Implement handle() method.
+            }
+        };
+        return $handler;
+    }
 }
