@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Zeroplex\Crawler\Crawler;
+use Zeroplex\Crawler\Handler\AbstractHandler;
 
 class CrawlerTest extends TestCase
 {
@@ -99,27 +100,9 @@ class CrawlerTest extends TestCase
 
     protected function makeTestingHandler(): AbstractHandler
     {
-        $handler = new class extends AbstractHandler
-        {
-            public function getDomain(): string
-            {
-                return 'zeroplex.tw';
-            }
-
-            public function shouldFetch(RequestInterface $request): bool
-            {
-                // TODO: Implement shouldFetch() method.
-                if ($request->getUri()->getHost() == $this->getDomain()) {
-                    return true;
-                }
-                return false;
-            }
-
-            public function handle(ResponseInterface $response): void
-            {
-                // TODO: Implement handle() method.
-            }
-        };
+        $handler = $this->createMock(AbstractHandler::class)
+            ->expects($this->once())
+            ->method('shouldFetch');
         return $handler;
     }
 }
