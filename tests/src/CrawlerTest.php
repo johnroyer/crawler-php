@@ -108,4 +108,15 @@ class CrawlerTest extends TestCase
             count($this->crawler->getHandlers())
         );
     }
+
+    public function testDeleteHandler()
+    {
+        $handler = $this->createMock(AbstractHandler::class);
+        $handler->expects($this->atLeast(1))
+            ->method('getDomain')
+            ->willReturn('zeroplex.tw');
+        $this->crawler->addHandler($handler);
+
+        $this->crawler->deleteHandler($handler);
+    }
 }
