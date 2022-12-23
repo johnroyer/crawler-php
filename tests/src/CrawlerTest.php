@@ -118,5 +118,10 @@ class CrawlerTest extends TestCase
         $this->crawler->addHandler($handler);
 
         $this->crawler->deleteHandler($handler);
+
+        $this->assertEquals(
+            0,
+            count($this->crawler->getHandlers())
+        );
     }
 }
