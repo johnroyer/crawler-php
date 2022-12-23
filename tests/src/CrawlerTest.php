@@ -124,4 +124,21 @@ class CrawlerTest extends TestCase
             count($this->crawler->getHandlers())
         );
     }
+
+    public function testHandlerGetterByDomain()
+    {
+        $domain = 'zeroplex.tw';
+        $handler = $this->createMock(AbstractHandler::class);
+        $handler->expects($this->atLeast(1))
+            ->method('getDomain')
+            ->willReturn($domain);
+        $this->crawler->addHandler($handler);
+
+        $result = $this->crawler->getHandlerByDomain($domain);
+        $this->assertTrue($result !== null);
+        $this->assertEquals(
+            $domain,
+            $result->getDomain()
+        );
+    }
 }
