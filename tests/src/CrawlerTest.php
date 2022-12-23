@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use GuzzleHttp\Psr7\Request;
 use Zeroplex\Crawler\Crawler;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 
@@ -139,6 +140,26 @@ class CrawlerTest extends TestCase
         $this->assertEquals(
             $domain,
             $result->getDomain()
+        );
+    }
+
+    public function testDomainFetchChecker()
+    {
+        $domain = 'zeroplex.tw';
+        $fetch = false;
+        $handler = $this->createMock(AbstractHandler::class);
+        $handler->expects($this->atLeast(1))
+            ->method('getDomain')
+            ->willReturn($domain);
+        $handler->expects($this->atLeast(1))
+            ->method('shouldFetch')
+            ->willReturn($fetch);
+        $this->crawler->addHandler($handler);
+
+        $request = new Request('GET', 'https://' . $domain);
+        $this->assertSame(
+            $fetch,
+            $this->crawler->shouldFetch($request)
         );
     }
 }
