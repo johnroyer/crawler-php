@@ -2,7 +2,9 @@
 
 namespace Tests;
 
+use GuzzleHttp\Psr7\Request;
 use Zeroplex\Crawler\Crawler;
+use Zeroplex\Crawler\Handler\AbstractHandler;
 
 class CrawlerTest extends TestCase
 {
@@ -95,5 +97,69 @@ class CrawlerTest extends TestCase
 
         $this->expectException(\Exception::class);
         $this->crawler->setDelay($delay);
+    }
+
+    public function testAddingHandler()
+    {
+        $handler = $this->createMock(AbstractHandler::class);
+        $this->crawler->addHandler($handler);
+
+        $this->assertEquals(
+            1,
+            count($this->crawler->getHandlers())
+        );
+    }
+
+    public function testDeleteHandler()
+    {
+        $handler = $this->createMock(AbstractHandler::class);
+        $handler->expects($this->atLeast(1))
+            ->method('getDomain')
+            ->willReturn('zeroplex.tw');
+        $this->crawler->addHandler($handler);
+
+        $this->crawler->deleteHandler($handler);
+
+        $this->assertEquals(
+            0,
+            count($this->crawler->getHandlers())
+        );
+    }
+
+    public function testHandlerGetterByDomain()
+    {
+        $domain = 'zeroplex.tw';
+        $handler = $this->createMock(AbstractHandler::class);
+        $handler->expects($this->atLeast(1))
+            ->method('getDomain')
+            ->willReturn($domain);
+        $this->crawler->addHandler($handler);
+
+        $result = $this->crawler->getHandlerByDomain($domain);
+        $this->assertTrue($result !== null);
+        $this->assertEquals(
+            $domain,
+            $result->getDomain()
+        );
+    }
+
+    public function testDomainFetchChecker()
+    {
+        $domain = 'zeroplex.tw';
+        $fetch = false;
+        $handler = $this->createMock(AbstractHandler::class);
+        $handler->expects($this->atLeast(1))
+            ->method('getDomain')
+            ->willReturn($domain);
+        $handler->expects($this->atLeast(1))
+            ->method('shouldFetch')
+            ->willReturn($fetch);
+        $this->crawler->addHandler($handler);
+
+        $request = new Request('GET', 'https://' . $domain);
+        $this->assertSame(
+            $fetch,
+            $this->crawler->shouldFetch($request)
+        );
     }
 }

@@ -31,7 +31,7 @@ class ResultHandler
         if (array_key_exists($domain, $this->handlers)) {
             throw new \Exception('Duplicated handler');
         }
-        $this->handlers[$domain] = $domain;
+        $this->handlers[$domain] = $handler;
 
         return true;
     }

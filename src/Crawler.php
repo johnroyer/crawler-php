@@ -10,13 +10,13 @@ use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class Crawler
 {
-    protected $startUrl = '';
-    protected $allowRedirect = false;
-    protected $timeout = 10;
-    protected $delay = 0;
-    protected $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
-    protected $response;
-    protected $domainHandler;
+    protected string $startUrl = '';
+    protected bool $allowRedirect = false;
+    protected int $timeout = 10;
+    protected int $delay = 0;
+    protected string $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
+    protected Response $response;
+    protected ?ResultHandler $domainHandler;
 
     /**
      */
@@ -152,6 +152,17 @@ class Crawler
     }
 
     /**
+     * Find domain handler by domain name
+     *
+     * @param string $domain
+     * @return AbstractHandler|null
+     */
+    public function getHandlerByDomain(string $domain): ?AbstractHandler
+    {
+        return $this->domainHandler->getHandler($domain);
+    }
+
+    /**
      * Delete specific domain handler
      *
      * @param AbstractHandler $handler domain handler which to delete
@@ -164,22 +175,59 @@ class Crawler
     }
 
     /**
+     * figure out if URL shoud be fetched
+     * @param Request $request
+     * @return bool
+     */
+    public function shouldFetch(Request $request): bool
+    {
+        $handler = $this->domainHandler->getHandler($request->getUri()->getHost());
+        if (null === $handler) {
+            return false;
+        }
+        return $handler->shouldFetch($request);
+    }
+
+    /**
      * Start to crawl web pages
      *
      * @param string $url Url that starts from
      * @return string web page content
      */
-    public function run(string $url)
+    public function run(string $url): void
     {
         $this->startUrl = $url;
         $this->queue = new ArrayQueue();
 
-        $this->response = $this->fetch($url);
-        foreach ($this->getLinks($this->response, $url) as $url) {
+        // check if handler for startUrl exists
+        $request = new Request('GET', $url);
+
+        // check if startUrl should be fetched
+        if (!$this->shouldFetch($request)) {
+            throw new \Exception('This URL will not be crawled: ' . $url);
+            return;
+        }
+
+        // fetch content from startUrl
+        $response = $this->fetch($url);
+
+        // invoke handler to deal with content
+        $this->domainHandler
+            ->getHandler($request->getUri()->getHost())
+            ->handle($response);
+
+        // get links from content, and add them to queue
+        foreach ($this->getLinks($response, $url) as $url) {
+            $request = new Request('GET', $url);
+
+            if (!$this->shouldFetch($request)) {
+                continue;
+            }
+
             $this->queue->push($url);
         }
 
-        return $this->response->getBody()->getContents();
+        // next
     }
 
     /**

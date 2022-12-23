@@ -32,5 +32,5 @@ abstract class AbstractHandler
      * @param ResponseInterface $response
      * @return void
      */
-    abstract function handler(ResponseInterface $response): void;
+    abstract function handle(ResponseInterface $response): void;
 }
