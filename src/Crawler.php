@@ -218,14 +218,18 @@ class Crawler
 
         // get links from content, and add them to queue
         foreach ($this->getLinks($response, $url) as $url) {
-            $request = new Request('GET', $url);
-
-            if (!$this->shouldFetch($request)) {
-                continue;
-            }
-
-            $this->queue->push($url);
+            $this->checkAndSave($url);
         }
+    }
+
+    protected function checkAndSave(string $url): void
+    {
+        $request = new Request('GET', $url);
+
+        if (!$this->shouldFetch($request)) {
+            return;
+        }
+        $this->queue->push($url);
     }
 
     /**
