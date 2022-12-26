@@ -207,7 +207,9 @@ class Crawler
      */
     public function run(string $url): void
     {
-        $this->queue = new ArrayQueue();
+        if (null === $this->queue) {
+            $this->setupQueue();
+        }
 
         $this->preStart($url);
 
