@@ -198,12 +198,12 @@ class Crawler
     {
         $this->queue = new ArrayQueue();
 
-        $this->preRun($url);
+        $this->preStart($url);
 
         // next
     }
 
-    protected function preRun(string $url): void
+    protected function preStart(string $url): void
     {
         $request = new Request('GET', $url);
 
