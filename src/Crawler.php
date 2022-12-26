@@ -196,22 +196,22 @@ class Crawler
      */
     public function run(string $url): void
     {
-        $this->startUrl = $url;
         $this->queue = new ArrayQueue();
 
-        // check if handler for startUrl exists
+        $this->preRun($url);
+
+        // next
+    }
+
+    protected function preRun(string $url): void
+    {
         $request = new Request('GET', $url);
 
-        // check if startUrl should be fetched
         if (!$this->shouldFetch($request)) {
-            throw new \Exception('This URL will not be crawled: ' . $url);
             return;
         }
 
-        // fetch content from startUrl
         $response = $this->fetch($url);
-
-        // invoke handler to deal with content
         $this->domainHandler
             ->getHandler($request->getUri()->getHost())
             ->handle($response);
@@ -226,8 +226,6 @@ class Crawler
 
             $this->queue->push($url);
         }
-
-        // next
     }
 
     /**
