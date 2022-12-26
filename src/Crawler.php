@@ -7,6 +7,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\Queue\ArrayQueue;
+use Zeroplex\Crawler\Queue\QueueInterface;
 
 class Crawler
 {
@@ -17,6 +18,7 @@ class Crawler
     protected string $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
     protected Response $response;
     protected ?ResultHandler $domainHandler;
+    protected ?QueueInterface $queue;
 
     /**
      */
@@ -68,6 +70,15 @@ class Crawler
         $this->timeout = $second;
 
         return $this;
+    }
+
+    public function setupQueue(?QueueInterface $q): void
+    {
+        if (null === $q) {
+            $this->queue = new ArrayQueue();
+        } else {
+            $this->queue = $q;
+        }
     }
 
     /**
