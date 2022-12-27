@@ -211,7 +211,10 @@ class Crawler
 
         $this->fetchAndSave($url);
 
-        // next
+        while (!$this->queue->isEmpty()) {
+            $url = $this->queue->pop();
+            $this->fetchAndSave($url);
+        }
     }
 
     protected function fetchAndSave($url): void
