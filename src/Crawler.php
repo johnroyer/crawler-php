@@ -209,32 +209,12 @@ class Crawler
     {
         $this->setupQueue();
 
-        $this->preStart($url);
+        $this->fetchAndSave($url);
 
         // next
     }
 
-    public function runFromQueue(): void
-    {
-        if ($this->queue->isEmpty()) {
-            return;
-        }
-        $url = $this->queue->pop();
-
-        $response = $this->fetch($url);
-        $this->domainHandler
-            ->getHandler($request->getUri()->getHost())
-            ->handle($response);
-
-        // get links from content, and add them to queue
-        foreach ($this->getLinks($response, $url) as $url) {
-            $this->checkAndSave($url);
-        }
-
-        // next
-    }
-
-    protected function preStart(string $url): void
+    protected function fetchAndSave($url): void
     {
         $request = new Request('GET', $url);
 
