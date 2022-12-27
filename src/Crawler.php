@@ -216,8 +216,11 @@ class Crawler
         }
     }
 
-    protected function fetchAndSave($url): void
+    protected function fetchAndSave(string $url): void
     {
+        if (empty($url)) {
+            return;
+        }
         $request = new Request('GET', $url);
 
         if (!$this->shouldFetch($request)) {
