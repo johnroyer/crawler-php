@@ -208,7 +208,10 @@ class Crawler
     {
         $this->setupQueue();
 
-        $this->fetchAndSave($url);
+        if (empty($url)) {
+            return;
+        }
+        $this->fetchAndSave(new Request('GET', $url));
 
         while (!$this->queue->isEmpty()) {
             $url = $this->queue->pop();
@@ -216,18 +219,13 @@ class Crawler
         }
     }
 
-    protected function fetchAndSave(string $url): void
+    protected function fetchAndSave(Request $request): void
     {
-        if (empty($url)) {
-            return;
-        }
-        $request = new Request('GET', $url);
-
         if (!$this->shouldFetch($request)) {
             return;
         }
 
-        $response = $this->fetch($url);
+        $response = $this->fetch($request, new Client());
         $this->domainHandler
             ->getHandler($request->getUri()->getHost())
             ->handle($response);
@@ -255,18 +253,13 @@ class Crawler
      * @return Response HTTP response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function fetch(string $url): Response
+    protected function fetch(Request $request, Client $client): Response
     {
-        $request = new Request(
-            'GET',
-            $url
-        );
         $request->withHeader(
             'User-Agent',
             $this->userAgent
         );
 
-        $client = new Client();
         $this->response = $client->send(
             $request,
             [
