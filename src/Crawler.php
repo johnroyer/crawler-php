@@ -74,11 +74,11 @@ class Crawler
 
     public function setupQueue(?QueueInterface $q): void
     {
-        if (null === $q) {
-            $this->queue = new ArrayQueue();
-        } else {
+        if (null !== $q) {
             $this->queue = $q;
+            return;
         }
+        $this->queue = new ArrayQueue();
     }
 
     /**
@@ -205,11 +205,9 @@ class Crawler
      * @param string $url Url that starts from
      * @return string web page content
      */
-    public function run(string $url): void
+    public function run(string $url = ''): void
     {
-        if (null === $this->queue) {
-            $this->setupQueue();
-        }
+        $this->setupQueue();
 
         $this->preStart($url);
 
