@@ -11,7 +11,6 @@ use Zeroplex\Crawler\Queue\QueueInterface;
 
 class Crawler
 {
-    protected string $startUrl = '';
     protected bool $allowRedirect = false;
     protected int $timeout = 10;
     protected int $delay = 0;
