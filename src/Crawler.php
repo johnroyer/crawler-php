@@ -211,7 +211,7 @@ class Crawler
         if (empty($url)) {
             return;
         }
-        $this->fetchAndSave(new Request('GET', $url));
+        $this->fetchAndSave($url);
 
         while (!$this->queue->isEmpty()) {
             $url = $this->queue->pop();
@@ -219,8 +219,9 @@ class Crawler
         }
     }
 
-    protected function fetchAndSave(Request $request): void
+    protected function fetchAndSave(string $url): void
     {
+        $request = new Request('GET', $url);
         if (!$this->shouldFetch($request)) {
             return;
         }
