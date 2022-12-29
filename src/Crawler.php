@@ -71,7 +71,7 @@ class Crawler
         return $this;
     }
 
-    public function setupQueue(?QueueInterface $q): void
+    public function setupQueue(QueueInterface $q = null): void
     {
         if (null !== $q) {
             $this->queue = $q;
