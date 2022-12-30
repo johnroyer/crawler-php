@@ -190,4 +190,14 @@ class CrawlerTest extends TestCase
             get_class($propRef->getValue($this->crawler))
         );
     }
+
+    public function testShoudFetchWithoutHandler()
+    {
+        $request = new Request('GET', 'https://test.com');
+
+        $this->assertSame(
+            false,
+            $this->crawler->shouldFetch($request)
+        );
+    }
 }
