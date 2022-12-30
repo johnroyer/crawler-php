@@ -5,6 +5,7 @@ namespace Tests;
 use GuzzleHttp\Psr7\Request;
 use Zeroplex\Crawler\Crawler;
 use Zeroplex\Crawler\Handler\AbstractHandler;
+use Zeroplex\Crawler\Queue\ArrayQueue;
 
 class CrawlerTest extends TestCase
 {
@@ -160,6 +161,33 @@ class CrawlerTest extends TestCase
         $this->assertSame(
             $fetch,
             $this->crawler->shouldFetch($request)
+        );
+    }
+
+    public function testQueueSettingUpWithNull()
+    {
+        $this->crawler->setupQueue();
+
+        $propRef = new \ReflectionProperty($this->crawler, 'queue');
+        $propRef->setAccessible(true);
+
+        $this->assertEquals(
+            'Zeroplex\Crawler\Queue\ArrayQueue',
+            get_class($propRef->getValue($this->crawler))
+        );
+    }
+
+    public function testQueueSettingUpWithCustomQueue()
+    {
+        $queue = new ArrayQueue();
+        $this->crawler->setupQueue($queue);
+
+        $propRef = new \ReflectionProperty($this->crawler, 'queue');
+        $propRef->setAccessible(true);
+
+        $this->assertEquals(
+            'Zeroplex\Crawler\Queue\ArrayQueue',
+            get_class($propRef->getValue($this->crawler))
         );
     }
 }
