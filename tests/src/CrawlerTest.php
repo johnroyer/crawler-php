@@ -215,4 +215,22 @@ class CrawlerTest extends TestCase
             $this->crawler->shouldFetch($request)
         );
     }
+
+    public function testShoudFetchWithMatchedHandler()
+    {
+        $handler = $this->createMock(AbstractHandler::class);
+        $handler->expects($this->atLeast(1))
+            ->method('getDomain')
+            ->willReturn('test.com');
+        $handler->expects($this->once())
+            ->method('shouldFetch')
+            ->willReturn(false);
+        $this->crawler->addHandler($handler);
+
+        $request = new Request('GET', 'https://test.com');
+        $this->assertSame(
+            false,
+            $this->crawler->shouldFetch($request)
+        );
+    }
 }
