@@ -286,13 +286,13 @@ class Crawler
         $html = $response->getBody()->getContents();
         $result = preg_match('/meta charset=\"([^\"]+)\"/u', $html, $matchs);
         if (1 !== $result) {
-            $endoing = 'UTF-8';
+            $encoding = 'UTF-8';
         } else {
             $setting = strtoupper($matchs[1]);
             if (in_array($setting, mb_list_encodings())) {
-                $endoing = $setting;
+                $encoding = $setting;
             } else {
-                $endoing = 'UTF-8';
+                $encoding = 'UTF-8';
             }
         }
 
@@ -301,7 +301,7 @@ class Crawler
             '',
             $url
         );
-        $crawler->addHtmlContent($html, $endoing);
+        $crawler->addHtmlContent($html, $encoding);
 
         $urls = $crawler->filter('a')->links();
         foreach ($urls as $url) {
