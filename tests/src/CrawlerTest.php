@@ -3,6 +3,7 @@
 namespace Tests;
 
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Zeroplex\Crawler\Crawler;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\Queue\ArrayQueue;
@@ -231,6 +232,18 @@ class CrawlerTest extends TestCase
         $this->assertSame(
             false,
             $this->crawler->shouldFetch($request)
+        );
+    }
+
+    public function testGettingLinksWithEmptyContent()
+    {
+        $response = new Response(200, [], '<html></html>');
+        $getlinks = new \ReflectionMethod($this->crawler, 'getLinks');
+        $getlinks->setAccessible(true);
+
+        $this->assertEquals(
+            0,
+            count($getlinks->invoke($this->crawler, $response, 'https://test.com'))
         );
     }
 }
