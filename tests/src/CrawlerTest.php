@@ -246,4 +246,21 @@ class CrawlerTest extends TestCase
             count($getlinks->invoke($this->crawler, $response, 'https://test.com'))
         );
     }
+
+    public function testGettingLinksWithTestPage()
+    {
+        $html = file_get_contents(__DIR__ . '/../dataset/example.html');
+        $response = new Response(
+            200,
+            [],
+            $html
+        );
+        $getLinks = new \ReflectionMethod($this->crawler, 'getLinks');
+        $getLinks->setAccessible(true);
+
+        $this->assertEquals(
+            4,
+            count($getLinks->invoke($this->crawler, $response, 'https://test.com'))
+        );
+    }
 }
