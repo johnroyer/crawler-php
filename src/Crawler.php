@@ -285,7 +285,7 @@ class Crawler
     {
         $html = $response->getBody()->getContents();
         $result = preg_match('/meta charset=\"([^\"]+)\"/u', $html, $matchs);
-        if (false === $result) {
+        if (1 !== $result) {
             $endoing = 'UTF-8';
         } else {
             $setting = strtoupper($matchs[1]);
