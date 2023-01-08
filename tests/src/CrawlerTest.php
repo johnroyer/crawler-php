@@ -263,4 +263,18 @@ class CrawlerTest extends TestCase
             count($getLinks->invoke($this->crawler, $response, 'https://test.com'))
         );
     }
+
+    public function testCrawlerRunWithEmptyUrl()
+    {
+        $crawler = $this->getMockBuilder(Crawler::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['setupQueue', 'fetchAndSave'])
+            ->getMock();
+        $crawler->expects($this->once())
+            ->method('setupQueue');
+        $crawler->expects($this->never())
+            ->method('fetchAndSave');
+
+        $crawler->run();
+    }
 }
