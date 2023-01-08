@@ -277,4 +277,27 @@ class CrawlerTest extends TestCase
 
         $crawler->run();
     }
+
+    public function testCrawlerRunWithStartUrl()
+    {
+        $queue = $this->createMock(ArrayQueue::class);
+        $queue->expects($this->once())
+            ->method('isEmpty')
+            ->willReturn(true);
+
+        $crawler = $this->getMockBuilder(Crawler::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['setupQueue', 'fetchAndSave'])
+            ->getMock();
+        $crawler->expects($this->once())
+            ->method('setupQueue');
+        $crawler->expects($this->once())
+            ->method('fetchAndSave');
+
+        $refProperty = new \ReflectionProperty($crawler, 'queue');
+        $refProperty->setAccessible(true);
+        $refProperty->setValue($crawler, $queue);
+
+        $crawler->run('https://test.com');
+    }
 }
