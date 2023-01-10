@@ -1,6 +1,6 @@
 <?php
 
-namespace Zeroplex\Crawler\Queue;
+namespace Zeroplex\Crawler\UrlQueue;
 
 /**
  * This interface defined major queue behaviour should be implement.
@@ -12,7 +12,7 @@ namespace Zeroplex\Crawler\Queue;
  * Every customize queue object should implement methods defined.
  * Crawler in this project will use ONLY methods litsed in the interface.
  */
-interface QueueInterface
+interface UrlQueueInterface
 {
     /**
      * Check if the queue is empty.

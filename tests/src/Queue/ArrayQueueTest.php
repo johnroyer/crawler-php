@@ -2,7 +2,7 @@
 
 namespace Tests\Queue;
 
-use Zeroplex\Crawler\Queue\ArrayQueue;
+use Zeroplex\Crawler\UrlQueue\ArrayQueue;
 
 class ArrayQueueTest extends \PHPUnit\Framework\TestCase
 {

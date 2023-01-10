@@ -1,8 +1,8 @@
 <?php
 
-namespace Zeroplex\Crawler\Queue;
+namespace Zeroplex\Crawler\UrlQueue;
 
-class ArrayQueue implements QueueInterface
+class ArrayQueue implements UrlQueueInterface
 {
     protected $list;
 
