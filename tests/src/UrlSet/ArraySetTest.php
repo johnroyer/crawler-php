@@ -90,4 +90,30 @@ class ArraySetTest extends \Tests\TestCase
             $set->isExists('bar')
         );
     }
+
+    public function testRemoveExistsValue()
+    {
+        $this->set->add('foo');
+        $this->set->add('bar');
+
+        $this->set->remove('bar');
+
+        $this->assertEquals(
+            1,
+            $this->set->getSize()
+        );
+    }
+
+    public function testRemoveUnexistsValue()
+    {
+        $this->set->add('foo');
+        $this->set->add('bar');
+
+        $this->set->remove('not-exists');
+
+        $this->assertEquals(
+            2,
+            $this->set->getSize()
+        );
+    }
 }
