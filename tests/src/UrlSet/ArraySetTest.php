@@ -65,4 +65,29 @@ class ArraySetTest extends \Tests\TestCase
             $set->getSize()
         );
     }
+
+    public function testIsExistsWithExistsValue()
+    {
+        $refProperty = new \ReflectionProperty($this->set, 'set');
+        $refProperty->setAccessible(true);
+        $refProperty->setValue($this->set, ['foo' => null]);
+
+        $this->assertSame(
+            true,
+            $this->set->isExists('foo')
+        );
+
+        return $this->set;
+    }
+
+    /**
+     * @depends testIsExistsWithExistsValue
+     */
+    public function testIsExistsWithUndefinedValue($set)
+    {
+        $this->assertSame(
+            false,
+            $set->isExists('bar')
+        );
+    }
 }
