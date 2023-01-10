@@ -134,4 +134,26 @@ class ArraySetTest extends \Tests\TestCase
             $this->set->isEmpty()
         );
     }
+
+    public function testToArray()
+    {
+        $this->set->add('foo');
+        $this->set->add('bar');
+
+        $output = $this->set->toArray();
+
+        $this->assertEquals(
+            2,
+            count($output)
+        );
+
+        $this->assertSame(
+            true,
+            in_array('foo', $output)
+        );
+        $this->assertSame(
+            true,
+            in_array('bar', $output)
+        );
+    }
 }
