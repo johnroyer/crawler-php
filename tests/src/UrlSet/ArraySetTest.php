@@ -116,4 +116,22 @@ class ArraySetTest extends \Tests\TestCase
             $this->set->getSize()
         );
     }
+
+    public function testIsEmptyAfterInitialized()
+    {
+        $this->assertSame(
+            true,
+            $this->set->isEmpty()
+        );
+    }
+
+    public function testIsEmptyAfterAddingValue()
+    {
+        $this->set->add('foobar');
+
+        $this->assertSame(
+            false,
+            $this->set->isEmpty()
+        );
+    }
 }
