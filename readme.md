@@ -47,3 +47,35 @@ $crawler->addHandler(new BlogHandler());
 // URL to start
 $crawler->run('https://test.com');
 ```
+
+## Extends
+
+For example, implement URL queue by Predis.
+
+composer install:
+
+```bash
+composer require predis/predis
+```
+
+Implement `UrlQueueInterface`:
+
+```php
+class RedisQueue implements Zeroplex\Crawler\UrlQueue\UrlQueueInterface
+{
+    private $redis;
+    public function __construct(string $host, int $port) { }
+
+    public function push(string $url): void
+    {
+        $this->redis->lpush($url);
+    }
+
+    public function pop(): string
+    {
+        return $this->redis->lpop();
+    }
+
+    // and so on
+}
+```
