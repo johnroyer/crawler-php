@@ -36,14 +36,14 @@ interface UrlQueueInterface
      * @param mixed $element
      * @return void
      */
-    public function push($element): void;
+    public function push(string $url): void;
 
     /**
      * Get an element from the queue
      *
      * @return mixed
      */
-    public function pop();
+    public function pop(): string;
 
     /**
      * Convert queue data into an array.

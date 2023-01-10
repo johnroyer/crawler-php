@@ -30,15 +30,15 @@ class ArrayQueue implements UrlQueueInterface
     /**
      * @inheritDoc
      */
-    public function push($element): void
+    public function push(string $url): void
     {
-        $this->list[] = $element;
+        $this->list[] = $url;
     }
 
     /**
      * @inheritDoc
      */
-    public function pop()
+    public function pop(): string
     {
         return array_shift($this->list);
     }
