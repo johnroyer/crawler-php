@@ -40,4 +40,29 @@ class ArraySetTest extends \Tests\TestCase
             $this->set->getSize()
         );
     }
+
+    public function testAddUrlAfterInitialized()
+    {
+        $this->set->add('hello');
+
+        $this->assertEquals(
+            1,
+            $this->set->getSize()
+        );
+
+        return $this->set;
+    }
+
+    /**
+     * @depends testAddUrlAfterInitialized
+     */
+    public function testAddSecondUrl($set)
+    {
+        $set->add('world');
+
+        $this->assertEquals(
+            2,
+            $set->getSize()
+        );
+    }
 }
