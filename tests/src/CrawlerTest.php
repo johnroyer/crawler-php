@@ -173,7 +173,7 @@ class CrawlerTest extends TestCase
         $propRef->setAccessible(true);
 
         $this->assertEquals(
-            'Zeroplex\Crawler\Queue\ArrayQueue',
+            'Zeroplex\Crawler\UrlQueue\ArrayQueue',
             get_class($propRef->getValue($this->crawler))
         );
     }
@@ -187,7 +187,7 @@ class CrawlerTest extends TestCase
         $propRef->setAccessible(true);
 
         $this->assertEquals(
-            'Zeroplex\Crawler\Queue\ArrayQueue',
+            'Zeroplex\Crawler\UrlQueue\ArrayQueue',
             get_class($propRef->getValue($this->crawler))
         );
     }
