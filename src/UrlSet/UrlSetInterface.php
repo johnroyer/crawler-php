@@ -28,6 +28,14 @@ interface UrlSetInterface
     public function getSize(): int;
 
     /**
+     * Check if URL is already in set
+     *
+     * @param string $url
+     * @return bool true if URL exists, else if not
+     */
+    public function isExists(string $url): bool;
+
+    /**
      * Check if the set is empty
      *
      * @return bool true if nothing in the set, false if else
