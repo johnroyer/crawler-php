@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Queue;
+namespace Tests\UrlQueue;
 
 use Zeroplex\Crawler\UrlQueue\ArrayQueue;
 
