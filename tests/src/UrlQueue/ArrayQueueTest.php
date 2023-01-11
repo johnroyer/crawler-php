@@ -81,4 +81,22 @@ class ArrayQueueTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertCount(3, $output);
     }
+
+    public function testIsEmptyAfterInitialized()
+    {
+        $this->assertSame(
+            true,
+            $this->queue->isEmpty()
+        );
+    }
+
+    public function testIsEmptyAfterAddingUrl()
+    {
+        $this->queue->push('https://test.com');
+
+        $this->assertSame(
+            false,
+            $this->queue->isEmpty()
+        );
+    }
 }
