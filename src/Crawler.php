@@ -80,6 +80,9 @@ class Crawler
             $this->queue = $q;
             return;
         }
+        if (null !== $this->queue) {
+            return;
+        }
         $this->queue = new ArrayQueue();
     }
 
@@ -87,6 +90,9 @@ class Crawler
     {
         if (null !== $s) {
             $this->crawledUrl = $s;
+            return;
+        }
+        if (null !== $this->crawledUrl) {
             return;
         }
         $this->crawledUrl = new ArraySet();
