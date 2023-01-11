@@ -255,7 +255,7 @@ class Crawler
         $response = $this->fetch($request, new Client());
         $this->domainHandler
             ->getHandler($request->getUri()->getHost())
-            ->handle($response);
+            ->handle($response, $request);
 
         // save to crawled set
         $this->crawledUrl->add($url);
