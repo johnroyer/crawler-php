@@ -8,6 +8,8 @@ use GuzzleHttp\Psr7\Response;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\UrlQueue\ArrayQueue;
 use Zeroplex\Crawler\UrlQueue\UrlQueueInterface;
+use Zeroplex\Crawler\UrlSet\ArraySet;
+use Zeroplex\Crawler\UrlSet\UrlSetInterface;
 
 class Crawler
 {
@@ -18,12 +20,15 @@ class Crawler
     protected Response $response;
     protected ?ResultHandler $domainHandler;
     protected ?UrlQueueInterface $queue;
+    protected ?UrlSetInterface $crawledUrl;
 
     /**
      */
     public function __construct()
     {
         $this->domainHandler = new ResultHandler();
+        $this->queue = null;
+        $this->crawledUrl = null;
     }
 
     public function __destruct()
@@ -77,7 +82,22 @@ class Crawler
             $this->queue = $q;
             return;
         }
+        if (null !== $this->queue) {
+            return;
+        }
         $this->queue = new ArrayQueue();
+    }
+
+    public function setupCrawledUrlSet(UrlSetInterface $s = null): void
+    {
+        if (null !== $s) {
+            $this->crawledUrl = $s;
+            return;
+        }
+        if (null !== $this->crawledUrl) {
+            return;
+        }
+        $this->crawledUrl = new ArraySet();
     }
 
     /**
@@ -207,6 +227,7 @@ class Crawler
     public function run(string $url = ''): void
     {
         $this->setupQueue();
+        $this->setupCrawledUrlSet();
 
         if (empty($url)) {
             return;
@@ -221,6 +242,11 @@ class Crawler
 
     protected function fetchAndSave(string $url): void
     {
+        if ($this->crawledUrl->isExists($url)) {
+            // already fetched
+            return;
+        }
+
         $request = new Request('GET', $url);
         if (!$this->shouldFetch($request)) {
             return;
@@ -230,6 +256,9 @@ class Crawler
         $this->domainHandler
             ->getHandler($request->getUri()->getHost())
             ->handle($response);
+
+        // save to crawled set
+        $this->crawledUrl->add($url);
 
         // get links from content, and add them to queue
         foreach ($this->getLinks($response, $url) as $url) {

@@ -267,7 +267,6 @@ class CrawlerTest extends TestCase
     public function testCrawlerRunWithEmptyUrl()
     {
         $crawler = $this->getMockBuilder(Crawler::class)
-            ->disableOriginalConstructor()
             ->onlyMethods(['setupQueue', 'fetchAndSave'])
             ->getMock();
         $crawler->expects($this->once())
@@ -286,7 +285,6 @@ class CrawlerTest extends TestCase
             ->willReturn(true);
 
         $crawler = $this->getMockBuilder(Crawler::class)
-            ->disableOriginalConstructor()
             ->onlyMethods(['setupQueue', 'fetchAndSave'])
             ->getMock();
         $crawler->expects($this->once())
