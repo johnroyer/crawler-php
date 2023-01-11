@@ -266,6 +266,12 @@ class Crawler
         }
     }
 
+    /**
+     * Check if URL should be crawled
+     *
+     * @param string $url URL to check
+     * @return void
+     */
     protected function checkAndSave(string $url): void
     {
         $request = new Request('GET', $url);
