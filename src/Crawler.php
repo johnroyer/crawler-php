@@ -27,6 +27,8 @@ class Crawler
     public function __construct()
     {
         $this->domainHandler = new ResultHandler();
+        $this->queue = null;
+        $this->crawledUrl = null;
     }
 
     public function __destruct()
