@@ -242,6 +242,11 @@ class Crawler
 
     protected function fetchAndSave(string $url): void
     {
+        if ($this->crawledUrl->isExists($url)) {
+            // already fetched
+            return;
+        }
+
         $request = new Request('GET', $url);
         if (!$this->shouldFetch($request)) {
             return;
@@ -251,6 +256,9 @@ class Crawler
         $this->domainHandler
             ->getHandler($request->getUri()->getHost())
             ->handle($response);
+
+        // save to crawled set
+        $this->crawledUrl->add($url);
 
         // get links from content, and add them to queue
         foreach ($this->getLinks($response, $url) as $url) {
