@@ -8,6 +8,8 @@ use GuzzleHttp\Psr7\Response;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\UrlQueue\ArrayQueue;
 use Zeroplex\Crawler\UrlQueue\UrlQueueInterface;
+use Zeroplex\Crawler\UrlSet\ArraySet;
+use Zeroplex\Crawler\UrlSet\UrlSetInterface;
 
 class Crawler
 {
@@ -18,6 +20,7 @@ class Crawler
     protected Response $response;
     protected ?ResultHandler $domainHandler;
     protected ?UrlQueueInterface $queue;
+    protected ?UrlSetInterface $crawledUrl;
 
     /**
      */
@@ -78,6 +81,15 @@ class Crawler
             return;
         }
         $this->queue = new ArrayQueue();
+    }
+
+    public function setupCrawledUrlSet(UrlSetInterface $s = null): void
+    {
+        if (null !== $s) {
+            $this->crawledUrl = $s;
+            return;
+        }
+        $this->crawledUrl = new ArraySet();
     }
 
     /**
@@ -207,6 +219,7 @@ class Crawler
     public function run(string $url = ''): void
     {
         $this->setupQueue();
+        $this->setupCrawledUrlSet();
 
         if (empty($url)) {
             return;
