@@ -4,6 +4,7 @@
     "type": "library",
     "require": {
         "php": "^8.0|^8.1|^8.2",
+        "ext-intl": "*",
         "ext-mbstring": "*",
         "guzzlehttp/guzzle": "^7.4",
         "symfony/dom-crawler": "^6.2",
