@@ -302,7 +302,6 @@ class Crawler
                 'allow_redirects' => $this->allowRedirect,
                 'connect_timeout' => $this->timeout,
                 'delay' => $this->delay,
-                'read_timeout' => $this->timeout
             ]
         );
 
