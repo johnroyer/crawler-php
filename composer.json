@@ -6,7 +6,7 @@
         "php": "^8.0|^8.1|^8.2",
         "ext-intl": "*",
         "ext-mbstring": "*",
-        "guzzlehttp/guzzle": "^7.4",
+        "guzzlehttp/guzzle": "^7.5",
         "symfony/dom-crawler": "^6.2",
         "symfony/css-selector": "^6.2"
     },
