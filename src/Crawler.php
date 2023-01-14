@@ -14,8 +14,8 @@ use Zeroplex\Crawler\UrlSet\UrlSetInterface;
 class Crawler
 {
     protected bool $allowRedirect = false;
-    protected int $timeout = 10;
-    protected int $delay = 0;
+    protected float $timeout = 10.0;
+    protected float $delay = 0.0;
     protected string $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
     protected Response $response;
     protected ?ResultHandler $domainHandler;
@@ -302,7 +302,8 @@ class Crawler
                 'allow_redirects' => $this->allowRedirect,
                 'connect_timeout' => $this->timeout,
                 'delay' => $this->delay,
-                'read_timeout' => $this->timeout
+                'http_errors' => false,
+                'read_timeout' => 10.0,
             ]
         );
 
