@@ -303,6 +303,7 @@ class Crawler
                 'connect_timeout' => $this->timeout,
                 'delay' => $this->delay,
                 'http_errors' => false,
+                'read_timeout' => 10.0,
             ]
         );
 
