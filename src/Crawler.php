@@ -261,8 +261,8 @@ class Crawler
         $this->crawledUrl->add($url);
 
         // get links from content, and add them to queue
-        foreach ($this->getLinks($response, $url) as $url) {
-            $this->checkAndSave($url);
+        foreach ($this->getLinks($response, $url) as $link) {
+            $this->checkAndSave($link);
         }
     }
 
