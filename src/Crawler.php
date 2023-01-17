@@ -292,8 +292,9 @@ class Crawler
     /**
      * Fetch web page content from URL
      *
-     * @param string $url URL to crawl
-     * @return Response HTTP response
+     * @param Request $request Url going to fetch
+     * @param Client $client Guzzle HTTP client
+     * @return Response fetch result
      * @throws GuzzleException
      */
     protected function fetch(Request $request, Client $client): Response
