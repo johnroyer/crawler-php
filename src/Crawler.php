@@ -225,7 +225,6 @@ class Crawler
      * Start to crawl web pages
      *
      * @param string $url Url that starts from
-     * @return string web page content
      */
     public function run(string $url = ''): void
     {
