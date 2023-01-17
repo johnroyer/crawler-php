@@ -3,6 +3,7 @@
 namespace Zeroplex\Crawler;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Zeroplex\Crawler\Handler\AbstractHandler;
@@ -301,18 +302,23 @@ class Crawler
             $this->userAgent
         );
 
-        $this->response = $client->send(
-            $request,
-            [
-                'allow_redirects' => $this->allowRedirect,
-                'connect_timeout' => $this->timeout,
-                'delay' => $this->delay,
-                'http_errors' => false,
-                'read_timeout' => 10.0,
-            ]
+        $options = [
+            'allow_redirects' => $this->allowRedirect,
+            'connect_timeout' => $this->timeout,
+            'delay' => $this->delay,
+            'http_errors' => false,
+            'read_timeout' => 10.0,
+        ];
+
+        $promises = [];
+        $promises[] = $client->getAsync(
+            strval($request->getUri()),
+            $options
         );
 
-        return $this->response;
+        $responses = \GuzzleHttp\Promise\Utils::unwrap($promises);
+
+        return array_pop($responses);
     }
 
     /**
