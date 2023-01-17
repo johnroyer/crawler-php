@@ -2,8 +2,11 @@
 
 namespace Zeroplex\Crawler;
 
+use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Zeroplex\Crawler\Handler\AbstractHandler;
@@ -52,7 +55,7 @@ class Crawler
 
     /**
      * Check if crawler will follow HTTP redirect
-     * 
+     *
      * @return bool true if follow redirect, false if not
      */
     public function isFollowRedirect(): bool
@@ -65,12 +68,12 @@ class Crawler
      *
      * @param int $second HTTP request timeout in seconds, equals or larger then 1
      * @return $this
-     * @throws \Exception if input value is not valid
+     * @throws Exception if input value is not valid
      */
     public function setTimeout(int $second): Crawler
     {
         if (1 > $second) {
-            throw new \Exception('timeout must equal or larager then 1');
+            throw new Exception('timeout must equal or larager then 1');
         }
         $this->timeout = $second;
 
@@ -138,12 +141,12 @@ class Crawler
      *
      * @param int $second time between HTTP requests
      * @return $this
-     * @throws \Exception if input is not valid
+     * @throws Exception if input is not valid
      */
     public function setDelay(int $second): Crawler
     {
         if (0 > $second) {
-            throw  new \Exception('delay must be 0 or bigger');
+            throw  new Exception('delay must be 0 or bigger');
         }
         $this->delay = $second;
 
@@ -165,7 +168,7 @@ class Crawler
      *
      * @param AbstractHandler $handler domain handler
      * @return bool true if success, false if not
-     * @throws \Exception if input is not valid
+     * @throws Exception if input is not valid
      */
     public function addHandler(AbstractHandler $handler): bool
     {
@@ -293,7 +296,7 @@ class Crawler
      *
      * @param string $url URL to crawl
      * @return Response HTTP response
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     protected function fetch(Request $request, Client $client): Response
     {
@@ -316,7 +319,7 @@ class Crawler
             $options
         );
 
-        $responses = \GuzzleHttp\Promise\Utils::unwrap($promises);
+        $responses = Utils::unwrap($promises);
 
         return array_pop($responses);
     }
