@@ -71,7 +71,7 @@ class Crawler
     public function setTimeout(int $second): Crawler
     {
         if (1 > $second) {
-            throw new Exception('timeout must equal or larager then 1');
+            throw new Exception('timeout must equal or larger then 1');
         }
         $this->timeout = $second;
 
@@ -154,7 +154,7 @@ class Crawler
     /**
      * Get time delays between HTTP requests
      *
-     * @return int time deplay between HTTP requests
+     * @return int time deploy between HTTP requests
      */
     public function getDelay(): int
     {
@@ -207,7 +207,7 @@ class Crawler
     }
 
     /**
-     * figure out if URL shoud be fetched
+     * figure out if URL should be fetched
      * @param Request $request
      * @return bool
      */
@@ -331,11 +331,11 @@ class Crawler
     protected function getLinks(Response $response, string $url): array
     {
         $html = $response->getBody()->getContents();
-        $result = preg_match('/meta charset=\"([^\"]+)\"/u', $html, $matchs);
+        $result = preg_match('/meta charset=\"([^\"]+)\"/u', $html, $matches);
         if (1 !== $result) {
             $encoding = 'UTF-8';
         } else {
-            $setting = strtoupper($matchs[1]);
+            $setting = strtoupper($matches[1]);
             if (in_array($setting, mb_list_encodings())) {
                 $encoding = $setting;
             } else {
