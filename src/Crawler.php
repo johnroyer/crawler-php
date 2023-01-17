@@ -4,7 +4,6 @@ namespace Zeroplex\Crawler;
 
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -295,7 +294,6 @@ class Crawler
      * @param Request $request Url going to fetch
      * @param Client $client Guzzle HTTP client
      * @return Response fetch result
-     * @throws GuzzleException
      */
     protected function fetch(Request $request, Client $client): Response
     {
