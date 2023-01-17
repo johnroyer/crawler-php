@@ -63,7 +63,7 @@ class CrawlerTest extends TestCase
     {
         $agent = 'Firefox';
 
-        $this->crawler->setUserAgnet($agent);
+        $this->crawler->setUserAgent($agent);
 
         $this->assertEquals(
             $agent,
@@ -73,7 +73,7 @@ class CrawlerTest extends TestCase
 
     public function testUserAgentAsEmptyString()
     {
-        $this->crawler->setUserAgnet('');
+        $this->crawler->setUserAgent('');
 
         // user agent can be empty string (works as "reset user agent")
         $this->assertEquals(

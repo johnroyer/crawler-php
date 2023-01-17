@@ -118,7 +118,7 @@ class Crawler
      * @param string $agent user agent name
      * @return $this
      */
-    public function setUserAgnet(string $agent = ''): Crawler
+    public function setUserAgent(string $agent = ''): Crawler
     {
         $this->userAgent = $agent;
         return $this;

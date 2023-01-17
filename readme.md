@@ -40,7 +40,7 @@ $crawler = new \Zeroplex\Crawler\Crawler();
 $crawler->setDelay(0)
     ->setTimeout(3)
     ->setFollowRedirect(true)
-    ->setUserAgnet('Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/100.1');
+    ->setUserAgent('Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/100.1');
 
 $crawler->addHandler(new BlogHandler());
 
