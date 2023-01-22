@@ -293,7 +293,7 @@ class Crawler
 
     protected function normalizeUrl(string $url): string
     {
-        return (new Normalizer($url))
+        return (new Normalizer($url, true, true))
             ->normalize();
     }
 
