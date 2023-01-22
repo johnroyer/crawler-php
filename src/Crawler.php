@@ -282,13 +282,19 @@ class Crawler
      */
     protected function checkAndSave(string $url): void
     {
-        $url = (new Normalizer($url))->normalize();
+        $url = $this->normalizeUrl($url);
         $request = new Request('GET', $url);
 
         if (!$this->shouldFetch($request)) {
             return;
         }
         $this->queue->push($url);
+    }
+
+    protected function normalizeUrl(string $url): string
+    {
+        return (new Normalizer($url))
+            ->normalize();
     }
 
     /**
