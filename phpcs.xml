@@ -5,11 +5,5 @@
     <file>./src</file>
     <file>./tests</file>
 
-    <exclude-pattern>./tests/dataset</exclude-pattern>
-
-    <rule ref="Generic.Arrays.ArrayIndent"/>
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
-    <rule ref="Generic.PHP.Syntax"/>
-
     <rule ref="PSR12"></rule>
 </ruleset>
