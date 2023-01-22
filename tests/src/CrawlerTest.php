@@ -298,4 +298,29 @@ class CrawlerTest extends TestCase
 
         $crawler->run('https://test.com');
     }
+
+    public function urlNormalizeProvider()
+    {
+        return [
+            ['https://test.com/', 'https://test.com:443'],
+            ['https://test.com/', 'https://test.com'],
+            ['https://test.com/', 'https://test.com/?'],
+            ['https://test.com/?a=123', 'https://test.com?a=123'],
+            ['https://test.com/?a=123&b=string', 'https://test.com/?b=string&a=123'],
+        ];
+    }
+
+    /**
+     * @dataProvider urlNormalizeProvider
+     */
+    public function testUrlNomalize($expected, $url)
+    {
+        $refMethod = new \ReflectionMethod($this->crawler, 'normalizeUrl');
+        $refMethod->setAccessible(true);
+
+        $this->assertEquals(
+            $expected,
+            $refMethod->invoke($this->crawler, $url)
+        );
+    }
 }
