@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use URL\Normalizer;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\UrlQueue\ArrayQueue;
 use Zeroplex\Crawler\UrlQueue\UrlQueueInterface;
@@ -243,6 +244,7 @@ class Crawler
 
     protected function fetchAndSave(string $url): void
     {
+        $url = (new Normalizer($url))->normalize();
         if ($this->crawledUrl->isExists($url)) {
             // already fetched
             return;
@@ -280,12 +282,19 @@ class Crawler
      */
     protected function checkAndSave(string $url): void
     {
+        $url = $this->normalizeUrl($url);
         $request = new Request('GET', $url);
 
         if (!$this->shouldFetch($request)) {
             return;
         }
         $this->queue->push($url);
+    }
+
+    protected function normalizeUrl(string $url): string
+    {
+        return (new Normalizer($url, true, true))
+            ->normalize();
     }
 
     /**
