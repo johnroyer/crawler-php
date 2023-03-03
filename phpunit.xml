@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+         backupGlobals="false"
          beStrictAboutTestsThatDoNotTestAnything="false"
          colors="true"
-         convertDeprecationsToExceptions="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
-         verbose="true"
->
-    <testsuites>
-        <testsuite name="Crawler TestSuite">
-            <directory suffix="Test.php">./tests/src</directory>
-        </testsuite>
-    </testsuites>
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false">
 
-    <coverage cacheDirectory="/tmp/coverage"
-              includeUncoveredFiles="true"
-              processUncoveredFiles="true"
-              pathCoverage="false"
-              ignoreDeprecatedCodeUnits="true"
-              disableCodeCoverageIgnore="true">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </coverage>
+  <testsuites>
+    <testsuite name="Crawler TestSuite">
+      <directory suffix="Test.php">./tests/src</directory>
+    </testsuite>
+  </testsuites>
+
+  <coverage includeUncoveredFiles="true"
+            pathCoverage="false"
+            ignoreDeprecatedCodeUnits="true"
+            disableCodeCoverageIgnore="true">
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+  </coverage>
 </phpunit>
