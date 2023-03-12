@@ -299,7 +299,7 @@ class CrawlerTest extends TestCase
         $crawler->run('https://test.com');
     }
 
-    public function urlNormalizeProvider()
+    public static function urlNormalizeProvider()
     {
         return [
             ['https://test.com/', 'https://test.com:443'],
