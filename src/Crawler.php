@@ -164,6 +164,19 @@ class Crawler
         return $this->delay;
     }
 
+    public function getConcurrentCount(): int
+    {
+        return $this->concurrentCount;
+    }
+
+    public function setConcurrentCount(int $count): void
+    {
+        if (1 > $count) {
+            throw new Exception('count must equal or larger then 1');
+        }
+        $this->concurrentCount = $count;
+    }
+
     /**
      * Add handler for specific domain
      *
