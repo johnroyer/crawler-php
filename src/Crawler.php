@@ -319,7 +319,7 @@ class Crawler
      * @param Client $client Guzzle HTTP client
      * @return Response fetch result
      */
-    protected function fetch(Request $request, Client $client): Response
+    protected function fetch(Request $request, Client $client): void
     {
         $request->withHeader(
             'User-Agent',
@@ -334,15 +334,22 @@ class Crawler
             'read_timeout' => 10.0,
         ];
 
-        $promises = [];
-        $promises[] = $client->getAsync(
+        $this->guzzlePromise[] = $client->getAsync(
             strval($request->getUri()),
-            $options
+            $options,
         );
 
-        $responses = Utils::unwrap($promises);
+        if (count($this->guzzlePromise) == $this->concurrentCount) {
+            $responses = Promise\Utils::unwrap($this->guzzlePromise);
 
-        return array_pop($responses);
+            // reset
+            $this->concurrentCount = 0;
+            $this->guzzlePromise = [];
+
+            foreach ($responses as $response) {
+                $this->handleResponse($responses);
+            }
+        }
     }
 
     /**
