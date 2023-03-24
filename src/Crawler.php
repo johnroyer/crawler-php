@@ -335,6 +335,12 @@ class Crawler
     protected function checkAndSave(string $url): void
     {
         $url = $this->normalizeUrl($url);
+
+        if ($this->crawledUrl->isExists($url)) {
+            // URL has fetched
+            return;
+        }
+
         $request = new Request('GET', $url);
 
         if (!$this->shouldFetch($request)) {
