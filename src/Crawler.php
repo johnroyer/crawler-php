@@ -299,7 +299,7 @@ class Crawler
             $this->queue->isEmpty()
             || count($this->guzzlePromise) == $this->maxCouncurrent
         ) {
-            $responses = \GuzzleHttp\Promise\Utils::unwrap($this->guzzlePromise);
+            $responses = Utils::unwrap($this->guzzlePromise);
 
             foreach ($responses as $key => $response) {
                 $this->domainHandler
