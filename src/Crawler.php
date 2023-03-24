@@ -24,6 +24,9 @@ class Crawler
     protected ?ResultHandler $domainHandler;
     protected ?UrlQueueInterface $queue;
     protected ?UrlSetInterface $crawledUrl;
+    protected array $guzzlePromise;
+    protected int $maxCouncurrent;
+    protected array $requests;
 
     /**
      */
@@ -32,6 +35,9 @@ class Crawler
         $this->domainHandler = new ResultHandler();
         $this->queue = null;
         $this->crawledUrl = null;
+        $this->maxCouncurrent = 1;
+        $this->guzzlePromise = [];
+        $this->requests = [];
     }
 
     public function __destruct()
@@ -162,6 +168,19 @@ class Crawler
         return $this->delay;
     }
 
+    public function getMaxConcurrent(): int
+    {
+        return $this->maxCouncurrent;
+    }
+
+    public function setMaxConcurrent(int $count): void
+    {
+        if (1 > $count) {
+            throw new Exception('count must equal or larger then 1');
+        }
+        $this->maxCouncurrent = $count;
+    }
+
     /**
      * Add handler for specific domain
      *
@@ -255,57 +274,6 @@ class Crawler
             return;
         }
 
-        $response = $this->fetch($request, new Client());
-        $this->domainHandler
-            ->getHandler($request->getUri()->getHost())
-            ->handle($response, $request);
-
-        // save to crawled set
-        $this->crawledUrl->add($url);
-
-        // get links from content, and add them to queue
-        $this->findAndSaveLinks($response, $url);
-    }
-
-    protected function findAndSaveLinks(Response $response, string $currentUrl): void
-    {
-        foreach ($this->getLinks($response, $currentUrl) as $link) {
-            $this->checkAndSave($link);
-        }
-    }
-
-    /**
-     * Check if URL should be crawled
-     *
-     * @param string $url URL to check
-     * @return void
-     */
-    protected function checkAndSave(string $url): void
-    {
-        $url = $this->normalizeUrl($url);
-        $request = new Request('GET', $url);
-
-        if (!$this->shouldFetch($request)) {
-            return;
-        }
-        $this->queue->push($url);
-    }
-
-    protected function normalizeUrl(string $url): string
-    {
-        return (new Normalizer($url, true, true))
-            ->normalize();
-    }
-
-    /**
-     * Fetch web page content from URL
-     *
-     * @param Request $request Url going to fetch
-     * @param Client $client Guzzle HTTP client
-     * @return Response fetch result
-     */
-    protected function fetch(Request $request, Client $client): Response
-    {
         $request->withHeader(
             'User-Agent',
             $this->userAgent
@@ -319,15 +287,68 @@ class Crawler
             'read_timeout' => 10.0,
         ];
 
-        $promises = [];
-        $promises[] = $client->getAsync(
+        $key = count($this->guzzlePromise);
+        $client = new Client();
+        $this->guzzlePromise[$key] = $client->getAsync(
             strval($request->getUri()),
-            $options
+            $options,
         );
+        $this->requests[$key] = $request;
 
-        $responses = Utils::unwrap($promises);
+        if (
+            $this->queue->isEmpty()
+            || count($this->guzzlePromise) == $this->maxCouncurrent
+        ) {
+            $responses = Utils::unwrap($this->guzzlePromise);
 
-        return array_pop($responses);
+            foreach ($responses as $key => $response) {
+                $this->domainHandler
+                    ->getHandler($this->requests[$key]->getUri()->getHost())
+                    ->handle($response, $this->requests[$key]);
+
+                // save to crawled set
+                $this->crawledUrl->add($url);
+
+                // get links from content, and add them to queue
+                $this->findAndSaveLinks($response, $url);
+            }
+
+            // reset
+            $this->guzzlePromise = [];
+            $this->requests = [];
+        }
+    }
+
+    protected function findAndSaveLinks(Response $response, string $currentUrl): void
+    {
+        $parsedUrls = [];
+
+        foreach ($this->getLinks($response, $currentUrl) as $url) {
+            $url = $this->normalizeUrl($url);
+
+            if (array_key_exists($url, $parsedUrls)) {
+                // duplicated URL
+                continue;
+            }
+
+            if ($this->crawledUrl->isExists($url)) {
+                // URL has fetched
+                continue;
+            }
+
+            $request = new Request('GET', $url);
+            if (!$this->shouldFetch($request)) {
+                continue;
+            }
+            $this->queue->push($url);
+            $parsedUrls[$url] = 0;
+        }
+    }
+
+    protected function normalizeUrl(string $url): string
+    {
+        return (new Normalizer($url, true, true))
+            ->normalize();
     }
 
     /**
