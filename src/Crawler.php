@@ -304,7 +304,7 @@ class Crawler
             foreach ($responses as $key => $response) {
                 $this->domainHandler
                     ->getHandler($this->requests[$key]->getUri()->getHost())
-                    ->handle($response, $request);
+                    ->handle($response, $this->requests[$key]);
 
                 // save to crawled set
                 $this->crawledUrl->add($url);
