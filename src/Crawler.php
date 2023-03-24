@@ -341,7 +341,7 @@ class Crawler
         );
 
         if (count($this->guzzlePromise) == $this->concurrentCount) {
-            $responses = Promise\Utils::unwrap($this->guzzlePromise);
+            $responses = \GuzzleHttp\Promise\Utils::unwrap($this->guzzlePromise);
 
             // reset
             $this->concurrentCount = 0;
