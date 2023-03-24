@@ -345,7 +345,10 @@ class Crawler
         );
         $this->requests[$key] = $request;
 
-        if (count($this->guzzlePromise) == $this->maxCouncurrent) {
+        if (
+            $this->queue->isEmpty()
+            || count($this->guzzlePromise) == $this->maxCouncurrent
+        ) {
             $responses = \GuzzleHttp\Promise\Utils::unwrap($this->guzzlePromise);
 
             foreach ($responses as $key => $response) {
