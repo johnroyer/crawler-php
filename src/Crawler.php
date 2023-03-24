@@ -352,17 +352,6 @@ class Crawler
     }
 
     /**
-     * Fetch web page content from URL
-     *
-     * @param Request $request Url going to fetch
-     * @param Client $client Guzzle HTTP client
-     * @return Response fetch result
-     */
-    protected function fetch(Request $request, Client $client): void
-    {
-    }
-
-    /**
      * Get pages links and assets links from HTTP response
      *
      * @param Response $response HTTP response
