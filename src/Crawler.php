@@ -321,9 +321,15 @@ class Crawler
 
     protected function findAndSaveLinks(Response $response, string $currentUrl): void
     {
-        $links = [];
+        $parsedUrls = [];
+
         foreach ($this->getLinks($response, $currentUrl) as $url) {
             $url = $this->normalizeUrl($url);
+
+            if (array_key_exists($url, $parsedUrls)) {
+                // duplicated URL
+                continue;
+            }
 
             if ($this->crawledUrl->isExists($url)) {
                 // URL has fetched
@@ -335,6 +341,7 @@ class Crawler
                 continue;
             }
             $this->queue->push($url);
+            $parsedUrls[$url] = 0;
         }
     }
 
