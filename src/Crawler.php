@@ -34,6 +34,7 @@ class Crawler
         $this->domainHandler = new ResultHandler();
         $this->queue = null;
         $this->crawledUrl = null;
+        $this->concurrentCount = 1;
     }
 
     public function __destruct()
