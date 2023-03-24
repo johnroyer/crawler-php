@@ -26,6 +26,7 @@ class Crawler
     protected ?UrlSetInterface $crawledUrl;
     protected array $guzzlePromise;
     protected int $maxCouncurrent;
+    protected array $requests;
 
     /**
      */
@@ -35,6 +36,8 @@ class Crawler
         $this->queue = null;
         $this->crawledUrl = null;
         $this->maxCouncurrent = 1;
+        $this->$guzzlePromise = [];
+        $this->requests = [];
     }
 
     public function __destruct()
@@ -335,20 +338,25 @@ class Crawler
             'read_timeout' => 10.0,
         ];
 
-        $this->guzzlePromise[] = $client->getAsync(
+        $key = count($this->guzzlePromise);
+        $this->guzzlePromise[$key] = $client->getAsync(
             strval($request->getUri()),
             $options,
         );
+        $this->requests[$key] = $request;
 
         if (count($this->guzzlePromise) == $this->maxCouncurrent) {
             $responses = \GuzzleHttp\Promise\Utils::unwrap($this->guzzlePromise);
 
+            foreach ($responses as $key => $response) {
+                $this->domainHandler
+                    ->getHandler($this->requests[$key]->getUri()->getHost())
+                    ->handle($response, $request);
+            }
+
             // reset
             $this->guzzlePromise = [];
-
-            foreach ($responses as $response) {
-                $this->handleResponse($responses);
-            }
+            $this->requests = [];
         }
     }
 
