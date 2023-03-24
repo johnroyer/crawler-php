@@ -321,32 +321,21 @@ class Crawler
 
     protected function findAndSaveLinks(Response $response, string $currentUrl): void
     {
-        foreach ($this->getLinks($response, $currentUrl) as $link) {
-            $this->checkAndSave($link);
+        $links = [];
+        foreach ($this->getLinks($response, $currentUrl) as $url) {
+            $url = $this->normalizeUrl($url);
+
+            if ($this->crawledUrl->isExists($url)) {
+                // URL has fetched
+                continue;
+            }
+
+            $request = new Request('GET', $url);
+            if (!$this->shouldFetch($request)) {
+                continue;
+            }
+            $this->queue->push($url);
         }
-    }
-
-    /**
-     * Check if URL should be crawled
-     *
-     * @param string $url URL to check
-     * @return void
-     */
-    protected function checkAndSave(string $url): void
-    {
-        $url = $this->normalizeUrl($url);
-
-        if ($this->crawledUrl->isExists($url)) {
-            // URL has fetched
-            return;
-        }
-
-        $request = new Request('GET', $url);
-
-        if (!$this->shouldFetch($request)) {
-            return;
-        }
-        $this->queue->push($url);
     }
 
     protected function normalizeUrl(string $url): string
