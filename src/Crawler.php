@@ -36,7 +36,7 @@ class Crawler
         $this->queue = null;
         $this->crawledUrl = null;
         $this->maxCouncurrent = 1;
-        $this->$guzzlePromise = [];
+        $this->guzzlePromise = [];
         $this->requests = [];
     }
 
