@@ -355,6 +355,12 @@ class Crawler
                 $this->domainHandler
                     ->getHandler($this->requests[$key]->getUri()->getHost())
                     ->handle($response, $request);
+
+                // save to crawled set
+                $this->crawledUrl->add($url);
+
+                // get links from content, and add them to queue
+                $this->findAndSaveLinks($response, $url);
             }
 
             // reset
