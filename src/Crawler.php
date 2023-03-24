@@ -274,16 +274,49 @@ class Crawler
             return;
         }
 
-        $response = $this->fetch($request, new Client());
-        $this->domainHandler
-            ->getHandler($request->getUri()->getHost())
-            ->handle($response, $request);
+        $request->withHeader(
+            'User-Agent',
+            $this->userAgent
+        );
 
-        // save to crawled set
-        $this->crawledUrl->add($url);
+        $options = [
+            'allow_redirects' => $this->allowRedirect,
+            'connect_timeout' => $this->timeout,
+            'delay' => $this->delay,
+            'http_errors' => false,
+            'read_timeout' => 10.0,
+        ];
 
-        // get links from content, and add them to queue
-        $this->findAndSaveLinks($response, $url);
+        $key = count($this->guzzlePromise);
+        $client = new Client();
+        $this->guzzlePromise[$key] = $client->getAsync(
+            strval($request->getUri()),
+            $options,
+        );
+        $this->requests[$key] = $request;
+
+        if (
+            $this->queue->isEmpty()
+            || count($this->guzzlePromise) == $this->maxCouncurrent
+        ) {
+            $responses = \GuzzleHttp\Promise\Utils::unwrap($this->guzzlePromise);
+
+            foreach ($responses as $key => $response) {
+                $this->domainHandler
+                    ->getHandler($this->requests[$key]->getUri()->getHost())
+                    ->handle($response, $request);
+
+                // save to crawled set
+                $this->crawledUrl->add($url);
+
+                // get links from content, and add them to queue
+                $this->findAndSaveLinks($response, $url);
+            }
+
+            // reset
+            $this->guzzlePromise = [];
+            $this->requests = [];
+        }
     }
 
     protected function findAndSaveLinks(Response $response, string $currentUrl): void
@@ -325,48 +358,6 @@ class Crawler
      */
     protected function fetch(Request $request, Client $client): void
     {
-        $request->withHeader(
-            'User-Agent',
-            $this->userAgent
-        );
-
-        $options = [
-            'allow_redirects' => $this->allowRedirect,
-            'connect_timeout' => $this->timeout,
-            'delay' => $this->delay,
-            'http_errors' => false,
-            'read_timeout' => 10.0,
-        ];
-
-        $key = count($this->guzzlePromise);
-        $this->guzzlePromise[$key] = $client->getAsync(
-            strval($request->getUri()),
-            $options,
-        );
-        $this->requests[$key] = $request;
-
-        if (
-            $this->queue->isEmpty()
-            || count($this->guzzlePromise) == $this->maxCouncurrent
-        ) {
-            $responses = \GuzzleHttp\Promise\Utils::unwrap($this->guzzlePromise);
-
-            foreach ($responses as $key => $response) {
-                $this->domainHandler
-                    ->getHandler($this->requests[$key]->getUri()->getHost())
-                    ->handle($response, $request);
-
-                // save to crawled set
-                $this->crawledUrl->add($url);
-
-                // get links from content, and add them to queue
-                $this->findAndSaveLinks($response, $url);
-            }
-
-            // reset
-            $this->guzzlePromise = [];
-            $this->requests = [];
-        }
     }
 
     /**
