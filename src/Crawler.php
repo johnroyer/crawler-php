@@ -276,17 +276,15 @@ class Crawler
             return;
         }
 
-        $request->withHeader(
-            'User-Agent',
-            $this->userAgent
-        );
-
         $options = [
             'allow_redirects' => $this->allowRedirect,
             'connect_timeout' => $this->timeout,
             'delay' => $this->delay,
             'http_errors' => false,
             'read_timeout' => 10.0,
+            'headers' => [
+                $this->userAgent,
+            ],
         ];
 
         $key = count($this->guzzlePromise);
