@@ -325,7 +325,7 @@ class Crawler
 
             // remove '#' in tail
             $position = strpos($url, '#');
-            if (0 <= $position) {
+            if (false !== $position && 0 <= $position) {
                 $url = substr($url, 0, $position);
             }
 
