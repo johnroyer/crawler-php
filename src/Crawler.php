@@ -323,6 +323,12 @@ class Crawler
         foreach ($this->getLinks($response, $currentUrl) as $url) {
             $url = $this->normalizeUrl($url);
 
+            // remove '#' in tail
+            $position = strpos($url, '#');
+            if (false !== $position && 0 <= $position) {
+                $url = substr($url, 0, $position);
+            }
+
             if (array_key_exists($url, $parsedUrls)) {
                 // duplicated URL
                 continue;
