@@ -292,7 +292,7 @@ class Crawler
         $key = count($this->guzzlePromise);
         $client = new Client();
         $this->guzzlePromise[$key] = $client->getAsync(
-            strval($request->getUri()),
+            $url,
             $options,
         )->then(function (ResponseInterface $response) use ($request, $url) {
             $this->domainHandler
