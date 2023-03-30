@@ -294,7 +294,7 @@ class Crawler
             $options,
         )->then(function (ResponseInterface $response) use ($request, $url) {
             $this->domainHandler
-                ->getHandler($this->requests->getUri()->getHost())
+                ->getHandler($request->getUri()->getHost())
                 ->handle($response, $request);
 
             // save to crawled set
