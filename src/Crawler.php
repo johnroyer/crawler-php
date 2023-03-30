@@ -308,7 +308,7 @@ class Crawler
             $this->queue->isEmpty()
             || count($this->guzzlePromise) == $this->maxCouncurrent
         ) {
-            $responses = Utils::unwrap($this->guzzlePromise);
+            Utils::unwrap($this->guzzlePromise);
 
             // reset
             $this->guzzlePromise = [];
