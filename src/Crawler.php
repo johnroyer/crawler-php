@@ -4,9 +4,11 @@ namespace Zeroplex\Crawler;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 use URL\Normalizer;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\UrlQueue\ArrayQueue;
@@ -292,26 +294,23 @@ class Crawler
         $this->guzzlePromise[$key] = $client->getAsync(
             strval($request->getUri()),
             $options,
-        );
-        $this->requests[$key] = $request;
+        )->then(function (ResponseInterface $response) use ($request, $url) {
+            $this->domainHandler
+                ->getHandler($this->requests->getUri()->getHost())
+                ->handle($response, $request);
+
+            // save to crawled set
+            $this->crawledUrl->add($url);
+
+            // get links from content, and add them to queue
+            $this->findAndSaveLinks($response, $url);
+        });
 
         if (
             $this->queue->isEmpty()
             || count($this->guzzlePromise) == $this->maxCouncurrent
         ) {
             $responses = Utils::unwrap($this->guzzlePromise);
-
-            foreach ($responses as $key => $response) {
-                $this->domainHandler
-                    ->getHandler($this->requests[$key]->getUri()->getHost())
-                    ->handle($response, $this->requests[$key]);
-
-                // save to crawled set
-                $this->crawledUrl->add($url);
-
-                // get links from content, and add them to queue
-                $this->findAndSaveLinks($response, $url);
-            }
 
             // reset
             $this->guzzlePromise = [];
