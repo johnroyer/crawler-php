@@ -276,27 +276,25 @@ class Crawler
             return;
         }
 
-        $request->withHeader(
-            'User-Agent',
-            $this->userAgent
-        );
-
         $options = [
             'allow_redirects' => $this->allowRedirect,
             'connect_timeout' => $this->timeout,
             'delay' => $this->delay,
             'http_errors' => false,
             'read_timeout' => 10.0,
+            'headers' => [
+                $this->userAgent,
+            ],
         ];
 
         $key = count($this->guzzlePromise);
         $client = new Client();
         $this->guzzlePromise[$key] = $client->getAsync(
-            strval($request->getUri()),
+            $url,
             $options,
         )->then(function (ResponseInterface $response) use ($request, $url) {
             $this->domainHandler
-                ->getHandler($this->requests->getUri()->getHost())
+                ->getHandler($request->getUri()->getHost())
                 ->handle($response, $request);
 
             // save to crawled set
@@ -310,7 +308,7 @@ class Crawler
             $this->queue->isEmpty()
             || count($this->guzzlePromise) == $this->maxCouncurrent
         ) {
-            $responses = Utils::unwrap($this->guzzlePromise);
+            Utils::unwrap($this->guzzlePromise);
 
             // reset
             $this->guzzlePromise = [];
