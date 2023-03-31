@@ -24,22 +24,17 @@ class Crawler
     protected string $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
     protected Response $response;
     protected ?ResultHandler $domainHandler;
-    protected ?UrlQueueInterface $queue;
-    protected ?UrlSetInterface $crawledUrl;
-    protected array $guzzlePromise;
-    protected int $maxConcurrent;
-    protected array $requests;
+    protected ?UrlQueueInterface $queue = null;
+    protected ?UrlSetInterface $crawledUrl = null;
+    protected array $guzzlePromise = [];
+    protected int $maxConcurrent = 1;
+    protected array $requests = [];
 
     /**
      */
     public function __construct()
     {
         $this->domainHandler = new ResultHandler();
-        $this->queue = null;
-        $this->crawledUrl = null;
-        $this->maxConcurrent = 1;
-        $this->guzzlePromise = [];
-        $this->requests = [];
     }
 
     /**
