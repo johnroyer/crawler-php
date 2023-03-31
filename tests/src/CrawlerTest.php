@@ -315,7 +315,7 @@ class CrawlerTest extends TestCase
      */
     public function testUrlNomalize($expected, $url)
     {
-        $refMethod = new \ReflectionMethod($this->crawler, 'normalizeUrl');
+        $refMethod = new \ReflectionMethod($this->crawler, 'urlNormalize');
         $refMethod->setAccessible(true);
 
         $this->assertEquals(
