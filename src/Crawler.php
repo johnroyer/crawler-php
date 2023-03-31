@@ -291,6 +291,8 @@ class Crawler
 
             // get links from content, and add them to queue
             $this->findAndSaveLinks($response, $url);
+        }, function (RequestException $re) {
+            // ingnore
         });
 
         if (
