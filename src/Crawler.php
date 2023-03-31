@@ -386,7 +386,8 @@ class Crawler
      */
     public function urlNormalize(string $url):string
     {
-        $url = (new Normalizer($url))->normalize();
+        $url = (new Normalizer($url, true, true))
+            ->normalize();
 
         // remove '#' in tail
         $position = strpos($url, '#');
