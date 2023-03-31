@@ -24,27 +24,17 @@ class Crawler
     protected string $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36';
     protected Response $response;
     protected ?ResultHandler $domainHandler;
-    protected ?UrlQueueInterface $queue;
-    protected ?UrlSetInterface $crawledUrl;
-    protected array $guzzlePromise;
-    protected int $maxCouncurrent;
-    protected array $requests;
+    protected ?UrlQueueInterface $queue = null;
+    protected ?UrlSetInterface $crawledUrl = null;
+    protected array $guzzlePromise = [];
+    protected int $maxConcurrent = 1;
+    protected array $requests = [];
 
     /**
      */
     public function __construct()
     {
         $this->domainHandler = new ResultHandler();
-        $this->queue = null;
-        $this->crawledUrl = null;
-        $this->maxCouncurrent = 1;
-        $this->guzzlePromise = [];
-        $this->requests = [];
-    }
-
-    public function __destruct()
-    {
-        $this->domainHandler = null;
     }
 
     /**
@@ -172,7 +162,7 @@ class Crawler
 
     public function getMaxConcurrent(): int
     {
-        return $this->maxCouncurrent;
+        return $this->maxConcurrent;
     }
 
     public function setMaxConcurrent(int $count): void
@@ -180,7 +170,7 @@ class Crawler
         if (1 > $count) {
             throw new Exception('count must equal or larger then 1');
         }
-        $this->maxCouncurrent = $count;
+        $this->maxConcurrent = $count;
     }
 
     /**
@@ -235,7 +225,7 @@ class Crawler
      */
     public function shouldFetch(Request $request): bool
     {
-        $handler = $this->domainHandler->getHandler($request->getUri()->getHost());
+        $handler = $this->getHandlerByDomain($request->getUri()->getHost());
         if (null === $handler) {
             return false;
         }
@@ -265,7 +255,7 @@ class Crawler
 
     protected function fetchAndSave(string $url): void
     {
-        $url = (new Normalizer($url))->normalize();
+        $url = $this->urlNormalize($url);
         if ($this->crawledUrl->isExists($url)) {
             // already fetched
             return;
@@ -293,8 +283,7 @@ class Crawler
             $url,
             $options,
         )->then(function (ResponseInterface $response) use ($request, $url) {
-            $this->domainHandler
-                ->getHandler($request->getUri()->getHost())
+            $this->getHandlerByDomain($request->getUri()->getHost())
                 ->handle($response, $request);
 
             // save to crawled set
@@ -302,11 +291,13 @@ class Crawler
 
             // get links from content, and add them to queue
             $this->findAndSaveLinks($response, $url);
+        }, function (RequestException $re) {
+            // ingnore
         });
 
         if (
             $this->queue->isEmpty()
-            || count($this->guzzlePromise) == $this->maxCouncurrent
+            || count($this->guzzlePromise) == $this->maxConcurrent
         ) {
             Utils::unwrap($this->guzzlePromise);
 
@@ -322,12 +313,6 @@ class Crawler
 
         foreach ($this->getLinks($response, $currentUrl) as $url) {
             $url = $this->normalizeUrl($url);
-
-            // remove '#' in tail
-            $position = strpos($url, '#');
-            if (false !== $position && 0 <= $position) {
-                $url = substr($url, 0, $position);
-            }
 
             if (array_key_exists($url, $parsedUrls)) {
                 // duplicated URL
@@ -346,12 +331,6 @@ class Crawler
             $this->queue->push($url);
             $parsedUrls[$url] = 0;
         }
-    }
-
-    protected function normalizeUrl(string $url): string
-    {
-        return (new Normalizer($url, true, true))
-            ->normalize();
     }
 
     /**
@@ -401,5 +380,23 @@ class Crawler
         }
 
         return $links;
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    public function urlNormalize(string $url):string
+    {
+        $url = (new Normalizer($url, true, true))
+            ->normalize();
+
+        // remove '#' in tail
+        $position = strpos($url, '#');
+        if (false !== $position && 0 <= $position) {
+            $url = substr($url, 0, $position);
+        }
+
+        return $url;
     }
 }
