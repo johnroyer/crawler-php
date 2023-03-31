@@ -27,7 +27,7 @@ class Crawler
     protected ?UrlQueueInterface $queue;
     protected ?UrlSetInterface $crawledUrl;
     protected array $guzzlePromise;
-    protected int $maxCouncurrent;
+    protected int $maxConcurrent;
     protected array $requests;
 
     /**
@@ -37,7 +37,7 @@ class Crawler
         $this->domainHandler = new ResultHandler();
         $this->queue = null;
         $this->crawledUrl = null;
-        $this->maxCouncurrent = 1;
+        $this->maxConcurrent = 1;
         $this->guzzlePromise = [];
         $this->requests = [];
     }
@@ -167,7 +167,7 @@ class Crawler
 
     public function getMaxConcurrent(): int
     {
-        return $this->maxCouncurrent;
+        return $this->maxConcurrent;
     }
 
     public function setMaxConcurrent(int $count): void
@@ -175,7 +175,7 @@ class Crawler
         if (1 > $count) {
             throw new Exception('count must equal or larger then 1');
         }
-        $this->maxCouncurrent = $count;
+        $this->maxConcurrent = $count;
     }
 
     /**
@@ -300,7 +300,7 @@ class Crawler
 
         if (
             $this->queue->isEmpty()
-            || count($this->guzzlePromise) == $this->maxCouncurrent
+            || count($this->guzzlePromise) == $this->maxConcurrent
         ) {
             Utils::unwrap($this->guzzlePromise);
 
