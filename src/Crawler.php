@@ -265,7 +265,7 @@ class Crawler
 
     protected function fetchAndSave(string $url): void
     {
-        $url = (new Normalizer($url))->normalize();
+        $url = $this->urlNormalize($url);
         if ($this->crawledUrl->isExists($url)) {
             // already fetched
             return;
@@ -323,12 +323,6 @@ class Crawler
         foreach ($this->getLinks($response, $currentUrl) as $url) {
             $url = $this->normalizeUrl($url);
 
-            // remove '#' in tail
-            $position = strpos($url, '#');
-            if (false !== $position && 0 <= $position) {
-                $url = substr($url, 0, $position);
-            }
-
             if (array_key_exists($url, $parsedUrls)) {
                 // duplicated URL
                 continue;
@@ -346,12 +340,6 @@ class Crawler
             $this->queue->push($url);
             $parsedUrls[$url] = 0;
         }
-    }
-
-    protected function normalizeUrl(string $url): string
-    {
-        return (new Normalizer($url, true, true))
-            ->normalize();
     }
 
     /**
@@ -401,5 +389,22 @@ class Crawler
         }
 
         return $links;
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    public function urlNormalize(string $url):string
+    {
+        $url = (new Normalizer($url))->normalize();
+
+        // remove '#' in tail
+        $position = strpos($url, '#');
+        if (false !== $position && 0 <= $position) {
+            $url = substr($url, 0, $position);
+        }
+
+        return $url;
     }
 }
