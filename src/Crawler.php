@@ -235,7 +235,7 @@ class Crawler
      */
     public function shouldFetch(Request $request): bool
     {
-        $handler = $this->domainHandler->getHandler($request->getUri()->getHost());
+        $handler = $this->getHandlerByDomain($request->getUri()->getHost());
         if (null === $handler) {
             return false;
         }
@@ -293,8 +293,7 @@ class Crawler
             $url,
             $options,
         )->then(function (ResponseInterface $response) use ($request, $url) {
-            $this->domainHandler
-                ->getHandler($request->getUri()->getHost())
+            $this->getHandlerByDomain($request->getUri()->getHost())
                 ->handle($response, $request);
 
             // save to crawled set
