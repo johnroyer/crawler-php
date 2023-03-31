@@ -42,11 +42,6 @@ class Crawler
         $this->requests = [];
     }
 
-    public function __destruct()
-    {
-        $this->domainHandler = null;
-    }
-
     /**
      * Follow HTTP redirect
      *
