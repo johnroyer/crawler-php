@@ -259,15 +259,9 @@ class Crawler
             ],
         ];
 
+        $this->queue->push($url);
+
         $client = new Client($options);
-
-        $request = new Request('GET', $url);
-        $response = $client->send($request, $options);
-        $this->getHandlerByDomain($request->getUri()->getHost())
-            ->handle($response, $request);
-        $this->crawledUrl->add($url);
-        $this->findAndSaveLinks($response, $url);
-
         while (!$this->queue->isEmpty()) {
             $pool = new Pool($client, $this->getPendingUrl($this->maxConcurrent), [
                 'concurrency' => $this->maxConcurrent,
