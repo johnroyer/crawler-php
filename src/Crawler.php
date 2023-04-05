@@ -5,6 +5,7 @@ namespace Zeroplex\Crawler;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -29,6 +30,7 @@ class Crawler
     protected array $guzzlePromise = [];
     protected int $maxConcurrent = 1;
     protected array $requests = [];
+    protected array $urls = [];
 
     /**
      */
@@ -245,11 +247,54 @@ class Crawler
         if (empty($url)) {
             return;
         }
-        $this->fetchAndSave($url);
+
+        $options = [
+            'allow_redirects' => $this->allowRedirect,
+            'connect_timeout' => $this->timeout,
+            'delay' => $this->delay,
+            'http_errors' => false,
+            'read_timeout' => 10.0,
+            'headers' => [
+                $this->userAgent,
+            ],
+        ];
+
+        $client = new Client($options);
+
+        $request = new Request('GET', $url);
+        $response = $client->send($request, $options);
+        $this->getHandlerByDomain($request->getUri()->getHost())
+            ->handle($response, $request);
+        $this->crawledUrl->add($url);
+        $this->findAndSaveLinks($response, $url);
 
         while (!$this->queue->isEmpty()) {
+            $pool = new Pool($client, $this->getPendingUrl($this->maxConcurrent), [
+                'concurrency' => $this->maxConcurrent,
+                'fulfilled' => function (Response $response, $index) {
+                    $this->getHandlerByDomain($this->requests[$index]->getUri()->getHost())
+                        ->handle($response, $this->requests[$index]);
+
+                    // save to crawled set
+                    $this->crawledUrl->add($this->urls[$index]);
+
+                    // get links from content, and add them to queue
+                    $this->findAndSaveLinks($response, $this->urls[$index]);
+                },
+            ]);
+            $pool->promise()->wait();
+        }
+    }
+
+    protected function getPendingUrl($max) {
+        for ($i = 0; $i < $max; $i++) {
             $url = $this->queue->pop();
-            $this->fetchAndSave($url);
+            $request = new Request('GET', $url);
+
+            $this->requests[$i] = $request;
+            $this->urls[$i] = $url;
+
+            yield $request;
         }
     }
 
