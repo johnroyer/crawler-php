@@ -275,6 +275,9 @@ class Crawler
                     // get links from content, and add them to queue
                     $this->findAndSaveLinks($response, $this->urls[$index]);
                 },
+                'rejected' => function (RequestException $e, $index) {
+                    // ignore
+                },
             ]);
             $pool->promise()->wait();
         }
