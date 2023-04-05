@@ -298,60 +298,6 @@ class Crawler
         }
     }
 
-    protected function fetchAndSave(string $url): void
-    {
-        $url = $this->urlNormalize($url);
-        if ($this->crawledUrl->isExists($url)) {
-            // already fetched
-            return;
-        }
-
-        $request = new Request('GET', $url);
-        if (!$this->shouldFetch($request)) {
-            return;
-        }
-
-        $options = [
-            'allow_redirects' => $this->allowRedirect,
-            'connect_timeout' => $this->timeout,
-            'delay' => $this->delay,
-            'http_errors' => false,
-            'read_timeout' => 10.0,
-            'headers' => [
-                $this->userAgent,
-            ],
-        ];
-
-        $key = count($this->guzzlePromise);
-        $client = new Client();
-        $this->guzzlePromise[$key] = $client->getAsync(
-            $url,
-            $options,
-        )->then(function (ResponseInterface $response) use ($request, $url) {
-            $this->getHandlerByDomain($request->getUri()->getHost())
-                ->handle($response, $request);
-
-            // save to crawled set
-            $this->crawledUrl->add($url);
-
-            // get links from content, and add them to queue
-            $this->findAndSaveLinks($response, $url);
-        }, function (RequestException $re) {
-            // ingnore
-        });
-
-        if (
-            $this->queue->isEmpty()
-            || count($this->guzzlePromise) == $this->maxConcurrent
-        ) {
-            Utils::unwrap($this->guzzlePromise);
-
-            // reset
-            $this->guzzlePromise = [];
-            $this->requests = [];
-        }
-    }
-
     protected function findAndSaveLinks(Response $response, string $currentUrl): void
     {
         $parsedUrls = [];
