@@ -5,6 +5,7 @@ namespace Zeroplex\Crawler;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -29,6 +30,7 @@ class Crawler
     protected array $guzzlePromise = [];
     protected int $maxConcurrent = 1;
     protected array $requests = [];
+    protected array $urls = [];
 
     /**
      */
@@ -245,26 +247,6 @@ class Crawler
         if (empty($url)) {
             return;
         }
-        $this->fetchAndSave($url);
-
-        while (!$this->queue->isEmpty()) {
-            $url = $this->queue->pop();
-            $this->fetchAndSave($url);
-        }
-    }
-
-    protected function fetchAndSave(string $url): void
-    {
-        $url = $this->urlNormalize($url);
-        if ($this->crawledUrl->isExists($url)) {
-            // already fetched
-            return;
-        }
-
-        $request = new Request('GET', $url);
-        if (!$this->shouldFetch($request)) {
-            return;
-        }
 
         $options = [
             'allow_redirects' => $this->allowRedirect,
@@ -273,37 +255,48 @@ class Crawler
             'http_errors' => false,
             'read_timeout' => 10.0,
             'headers' => [
-                $this->userAgent,
+               'User-Agent' => $this->userAgent,
             ],
         ];
 
-        $key = count($this->guzzlePromise);
-        $client = new Client();
-        $this->guzzlePromise[$key] = $client->getAsync(
-            $url,
-            $options,
-        )->then(function (ResponseInterface $response) use ($request, $url) {
-            $this->getHandlerByDomain($request->getUri()->getHost())
-                ->handle($response, $request);
+        $this->queue->push($url);
 
-            // save to crawled set
-            $this->crawledUrl->add($url);
+        $client = new Client($options);
+        while (!$this->queue->isEmpty()) {
+            $pool = new Pool($client, $this->getPendingUrl($this->maxConcurrent), [
+                'concurrency' => $this->maxConcurrent,
+                'fulfilled' => function (Response $response, $index) {
+                    $this->getHandlerByDomain($this->requests[$index]->getUri()->getHost())
+                        ->handle($response, $this->requests[$index]);
 
-            // get links from content, and add them to queue
-            $this->findAndSaveLinks($response, $url);
-        }, function (RequestException $re) {
-            // ingnore
-        });
+                    // save to crawled set
+                    $this->crawledUrl->add($this->urls[$index]);
 
-        if (
-            $this->queue->isEmpty()
-            || count($this->guzzlePromise) == $this->maxConcurrent
-        ) {
-            Utils::unwrap($this->guzzlePromise);
-
-            // reset
-            $this->guzzlePromise = [];
+                    // get links from content, and add them to queue
+                    $this->findAndSaveLinks($response, $this->urls[$index]);
+                },
+                'rejected' => function (RequestException $e, $index) {
+                    // ignore
+                },
+            ]);
+            $pool->promise()->wait();
             $this->requests = [];
+            $this->urls = [];
+        }
+    }
+
+    protected function getPendingUrl($max) {
+        $i = 0;
+        while(!$this->queue->isEmpty() && $i < $max) {
+
+            $url = $this->queue->pop();
+            $request = new Request('GET', $url);
+
+            $this->requests[$i] = $request;
+            $this->urls[$i] = $url;
+
+            $i++;
+            yield $request;
         }
     }
 
