@@ -312,7 +312,7 @@ class Crawler
         $parsedUrls = [];
 
         foreach ($this->getLinks($response, $currentUrl) as $url) {
-            $url = $this->normalizeUrl($url);
+            $url = $this->urlNormalize($url);
 
             if (array_key_exists($url, $parsedUrls)) {
                 // duplicated URL
