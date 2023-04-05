@@ -280,6 +280,8 @@ class Crawler
                 },
             ]);
             $pool->promise()->wait();
+            $this->requests = [];
+            $this->urls = [];
         }
     }
 
