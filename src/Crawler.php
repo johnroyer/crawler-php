@@ -288,7 +288,6 @@ class Crawler
     protected function getPendingUrl($max) {
         $i = 0;
         while(!$this->queue->isEmpty() && $i < $max) {
-            $i++;
 
             $url = $this->queue->pop();
             $request = new Request('GET', $url);
@@ -296,6 +295,7 @@ class Crawler
             $this->requests[$i] = $request;
             $this->urls[$i] = $url;
 
+            $i++;
             yield $request;
         }
     }
