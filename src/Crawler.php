@@ -255,7 +255,7 @@ class Crawler
             'http_errors' => false,
             'read_timeout' => 10.0,
             'headers' => [
-                $this->userAgent,
+               'User-Agent' => $this->userAgent,
             ],
         ];
 
