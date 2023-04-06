@@ -3,6 +3,7 @@
 namespace Zeroplex\Crawler;
 
 use Exception;
+use Generator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Pool;
@@ -282,7 +283,8 @@ class Crawler
         }
     }
 
-    protected function getPendingUrl($max) {
+    protected function getPendingUrl($max): Generator
+    {
         $i = 0;
         while(!$this->queue->isEmpty() && $i < $max) {
 
