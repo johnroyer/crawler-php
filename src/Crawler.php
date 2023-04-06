@@ -308,7 +308,7 @@ class Crawler
             $url = $this->urlNormalize($url);
 
             if (array_key_exists($url, $parsedUrls)) {
-                // duplicated URL
+                // duplicated URL in same page
                 continue;
             }
 
