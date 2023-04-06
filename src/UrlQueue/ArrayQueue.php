@@ -32,7 +32,7 @@ class ArrayQueue implements UrlQueueInterface
      */
     public function push(string $url): void
     {
-        $this->list[] = $url;
+        $this->list[$url] = 0;
     }
 
     /**
@@ -40,7 +40,9 @@ class ArrayQueue implements UrlQueueInterface
      */
     public function pop(): string
     {
-        return array_shift($this->list);
+        $url = array_key_first($this->list);
+        unset($this->list[$url]);
+        return $url;
     }
 
     /**
@@ -48,19 +50,11 @@ class ArrayQueue implements UrlQueueInterface
      */
     public function toArray(): array
     {
-        // avoid array_merge() because performance issue;
-        // @see: https://stackoverflow.com/a/23348715/8681141
-        $output = [];
-
-        foreach ($this->list as $val) {
-            $output[] = $val;
-        }
-
-        return $output;
+        return array_keys($this->list);
     }
 
     public function isExists(string $url): bool
     {
-        return in_array($url, $this->list);
+        return array_key_exists($url, $this->list);
     }
 }
