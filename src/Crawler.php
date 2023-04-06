@@ -25,7 +25,6 @@ class Crawler
     protected ?ResultHandler $domainHandler;
     protected ?UrlQueueInterface $queue = null;
     protected ?UrlSetInterface $crawledUrl = null;
-    protected array $guzzlePromise = [];
     protected int $maxConcurrent = 1;
     protected array $requests = [];
     protected array $urls = [];
