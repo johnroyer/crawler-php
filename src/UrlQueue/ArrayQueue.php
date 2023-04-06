@@ -58,4 +58,9 @@ class ArrayQueue implements UrlQueueInterface
 
         return $output;
     }
+
+    public function isExists(string $url): bool
+    {
+        return in_array($url, $this->list);
+    }
 }
