@@ -24,6 +24,16 @@ interface UrlQueueInterface
     public function isEmpty(): bool;
 
     /**
+     * Check if URL is already in queue
+     *
+     * Return true if URL is already in queue, false if not
+     *
+     * @param string $url
+     * @return bool
+     */
+    public function isExists(string $url): bool;
+
+    /**
      * Return the size of current queue
      *
      * @return int
