@@ -317,6 +317,11 @@ class Crawler
                 continue;
             }
 
+            if ($this->queue->isExists($url)) {
+                // URL is already in job queue
+                continue;
+            }
+
             $request = new Request('GET', $url);
             if (!$this->shouldFetch($request)) {
                 continue;
