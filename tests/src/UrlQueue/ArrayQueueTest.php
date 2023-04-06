@@ -99,4 +99,15 @@ class ArrayQueueTest extends \PHPUnit\Framework\TestCase
             $this->queue->isEmpty()
         );
     }
+
+    public function testIsExists()
+    {
+        $url = 'https://test.com';
+        $this->queue->push($url);
+
+        $this->assertSame(
+            true,
+            $this->queue->isExists($url)
+        );
+    }
 }
