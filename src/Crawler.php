@@ -379,22 +379,4 @@ class Crawler
 
         return $links;
     }
-
-    /**
-     * @param string $url
-     * @return string
-     */
-    public function urlNormalize(string $url):string
-    {
-        $url = (new Normalizer($url, true, true))
-            ->normalize();
-
-        // remove '#' in tail
-        $position = strpos($url, '#');
-        if (false !== $position && 0 <= $position) {
-            $url = substr($url, 0, $position);
-        }
-
-        return $url;
-    }
 }
