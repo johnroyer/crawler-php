@@ -304,7 +304,8 @@ class Crawler
         $parsedUrls = [];
 
         foreach ($this->getLinks($response, $currentUrl) as $url) {
-            $url = $this->urlNormalize($url);
+            $url = Url::normalize($url);
+            $url = Url::stripFragment($url);
 
             if (array_key_exists($url, $parsedUrls)) {
                 // duplicated URL in same page
