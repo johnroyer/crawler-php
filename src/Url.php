@@ -12,7 +12,7 @@ class Url
             ->normalize();
     }
 
-    public static function trimFragment(string $url): string
+    public static function stripFragment(string $url): string
     {
         // remove '#' in tail
         $position = strpos($url, '#');
