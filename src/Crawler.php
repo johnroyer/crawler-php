@@ -3,13 +3,12 @@
 namespace Zeroplex\Crawler;
 
 use Exception;
+use Generator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Pool;
-use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use Psr\Http\Message\ResponseInterface;
 use URL\Normalizer;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\UrlQueue\ArrayQueue;
@@ -27,7 +26,6 @@ class Crawler
     protected ?ResultHandler $domainHandler;
     protected ?UrlQueueInterface $queue = null;
     protected ?UrlSetInterface $crawledUrl = null;
-    protected array $guzzlePromise = [];
     protected int $maxConcurrent = 1;
     protected array $requests = [];
     protected array $urls = [];
@@ -285,7 +283,8 @@ class Crawler
         }
     }
 
-    protected function getPendingUrl($max) {
+    protected function getPendingUrl($max): Generator
+    {
         $i = 0;
         while(!$this->queue->isEmpty() && $i < $max) {
 
@@ -305,7 +304,8 @@ class Crawler
         $parsedUrls = [];
 
         foreach ($this->getLinks($response, $currentUrl) as $url) {
-            $url = $this->urlNormalize($url);
+            $url = Url::normalize($url);
+            $url = Url::stripFragment($url);
 
             if (array_key_exists($url, $parsedUrls)) {
                 // duplicated URL in same page
@@ -378,23 +378,5 @@ class Crawler
         }
 
         return $links;
-    }
-
-    /**
-     * @param string $url
-     * @return string
-     */
-    public function urlNormalize(string $url):string
-    {
-        $url = (new Normalizer($url, true, true))
-            ->normalize();
-
-        // remove '#' in tail
-        $position = strpos($url, '#');
-        if (false !== $position && 0 <= $position) {
-            $url = substr($url, 0, $position);
-        }
-
-        return $url;
     }
 }
