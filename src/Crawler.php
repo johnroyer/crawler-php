@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Symfony\Component\DomCrawler\Crawler as SymfonyCrawler;
 use URL\Normalizer;
 use Zeroplex\Crawler\Handler\AbstractHandler;
 use Zeroplex\Crawler\UrlQueue\ArrayQueue;
@@ -354,7 +355,7 @@ class Crawler
         }
 
         $links = [];
-        $crawler = new \Symfony\Component\DomCrawler\Crawler(
+        $crawler = new SymfonyCrawler(
             '',
             $url
         );
