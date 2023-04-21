@@ -71,16 +71,18 @@ class ResultHandlerTest extends Unit
             'test.com',
             $handler->getHandler('test.com')->getDomain(),
         );
+
+        return $handler;
     }
 
     /**
-     * @depends testGetDomainList
+     * @depends testGetHandler
      */
     public function testDeleteNonExistsDomainHandler($handler)
     {
-        $another = $this->createMock(AbstractHandler::class);
-        $another->method('getDomain')
-            ->willReturn('not.exists');
+        $another = Stub::make(AbstractHandler::class, [
+            'geteDomain' => 'not.exists'
+        ]);
 
         $handler->deleteHandler($another);
         $list = $handler->listDomainsHandled();
