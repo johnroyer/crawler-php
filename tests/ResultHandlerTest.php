@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Codeception\Stub;
 use Codeception\Test\Unit;
 use ReflectionProperty;
 use Zeroplex\Crawler\Handler\AbstractHandler;
@@ -26,9 +27,9 @@ class ResultHandlerTest extends Unit
 
     public function testAddHandler()
     {
-        $config = $this->createMock(AbstractHandler::class);
-        $config->method('getDomain')
-            ->willReturn('test.com');
+        $config = Stub::make(AbstractHandler::class, [
+            'getDomain' => 'test.com',
+        ]);
         $this->hander->addHandler($config);
 
         $refProperty = new ReflectionProperty($this->hander, 'handlers');
@@ -70,16 +71,18 @@ class ResultHandlerTest extends Unit
             'test.com',
             $handler->getHandler('test.com')->getDomain(),
         );
+
+        return $handler;
     }
 
     /**
-     * @depends testGetDomainList
+     * @depends testGetHandler
      */
     public function testDeleteNonExistsDomainHandler($handler)
     {
-        $another = $this->createMock(AbstractHandler::class);
-        $another->method('getDomain')
-            ->willReturn('not.exists');
+        $another = Stub::make(AbstractHandler::class, [
+            'geteDomain' => 'not.exists'
+        ]);
 
         $handler->deleteHandler($another);
         $list = $handler->listDomainsHandled();
