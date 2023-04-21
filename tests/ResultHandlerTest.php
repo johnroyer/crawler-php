@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Codeception\Stub;
 use Codeception\Test\Unit;
 use ReflectionProperty;
 use Zeroplex\Crawler\Handler\AbstractHandler;
@@ -26,9 +27,9 @@ class ResultHandlerTest extends Unit
 
     public function testAddHandler()
     {
-        $config = $this->createMock(AbstractHandler::class);
-        $config->method('getDomain')
-            ->willReturn('test.com');
+        $config = Stub::make(AbstractHandler::class, [
+            'getDomain' => 'test.com',
+        ]);
         $this->hander->addHandler($config);
 
         $refProperty = new ReflectionProperty($this->hander, 'handlers');
