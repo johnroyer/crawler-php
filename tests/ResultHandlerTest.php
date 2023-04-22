@@ -74,6 +74,17 @@ class ResultHandlerTest extends Unit
     }
 
     /**
+     * @depends testAddHandler
+     */
+    public function testNonExistsHandler($handler)
+    {
+        $this->assertSame(
+            null,
+            $handler->getHandler('not.exists'),
+        );
+    }
+
+    /**
      * @depends testGetDomainList
      */
     public function testGetHandler($handler)
