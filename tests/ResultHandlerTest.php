@@ -43,6 +43,17 @@ class ResultHandlerTest extends Unit
         return $this->hander;
     }
 
+    public function testAddDuplicatedHandler()
+    {
+        $config = Stub::make(AbstractHandler::class, [
+            'getDomain' => 'test.com',
+        ]);
+        $this->expectException(\Exception::class);
+
+        $this->hander->addHandler($config);
+        $this->hander->addHandler($config);
+    }
+
     /**
      * @depends testAddHandler
      */
