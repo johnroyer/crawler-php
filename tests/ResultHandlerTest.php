@@ -48,9 +48,11 @@ class ResultHandlerTest extends Unit
         $config = Stub::make(AbstractHandler::class, [
             'getDomain' => 'test.com',
         ]);
-        $this->expectException(\Exception::class);
 
         $this->hander->addHandler($config);
+
+        // should be failed at second time
+        $this->expectException(\Exception::class);
         $this->hander->addHandler($config);
     }
 
