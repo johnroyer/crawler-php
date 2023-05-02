@@ -7,8 +7,7 @@
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
-         cacheDirectory=".phpunit.cache"
-         backupStaticProperties="false">
+         backupStaticAttributes="false">
 
   <testsuites>
     <testsuite name="Crawler TestSuite">
@@ -19,6 +18,7 @@
   <coverage includeUncoveredFiles="true"
             pathCoverage="false"
             ignoreDeprecatedCodeUnits="true"
+            cacheDirectory="phpunitcache"
             disableCodeCoverageIgnore="true">
     <include>
       <directory suffix=".php">src</directory>
