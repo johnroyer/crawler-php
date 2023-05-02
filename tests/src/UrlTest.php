@@ -38,4 +38,26 @@ class UrlTest extends TestCase
             Url::normalize($input),
         );
     }
+
+    public function fragmentStripperProvider()
+    {
+        return [
+            ['http://test.com/', 'http://test.com/'],
+            ['http://test.com/', 'http://test.com/#artical'],
+            ['http://test.com/path/', 'http://test.com/path/'],
+            ['http://test.com/path/', 'http://test.com/path/#article'],
+            ['http://test.com/?foo=bar', 'http://test.com/?foo=bar#article'],
+        ];
+    }
+
+    /**
+     * @dataProvider fragmentStripperProvider
+     */
+    public function testFragmentStrippr($expected, $input)
+    {
+        $this->assertEquals(
+            $expected,
+            Url::stripFragment($input),
+        );
+    }
 }
