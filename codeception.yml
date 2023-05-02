@@ -12,9 +12,4 @@ paths:
     output: tests/_output
     support: tests/Support
     data: tests/Support/Data
-
-coverage:
-    enabled: true
-    include:
-        - 'src/*'
      
