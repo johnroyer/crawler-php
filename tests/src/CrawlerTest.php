@@ -6,6 +6,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Zeroplex\Crawler\Crawler;
 use Zeroplex\Crawler\Handler\AbstractHandler;
+use Zeroplex\Crawler\Url;
 use Zeroplex\Crawler\UrlQueue\ArrayQueue;
 
 class CrawlerTest extends TestCase
@@ -315,12 +316,9 @@ class CrawlerTest extends TestCase
      */
     public function testUrlNomalize($expected, $url)
     {
-        $refMethod = new \ReflectionMethod($this->crawler, 'urlNormalize');
-        $refMethod->setAccessible(true);
-
         $this->assertEquals(
             $expected,
-            $refMethod->invoke($this->crawler, $url)
+            Url::normalize($url),
         );
     }
 }

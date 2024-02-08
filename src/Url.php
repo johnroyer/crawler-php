@@ -2,7 +2,7 @@
 
 namespace Zeroplex\Crawler;
 
-use URL\Normalizer;
+use \Zeroplex\Url\Normalizer;
 
 class Url
 {
